@@ -49,6 +49,6 @@ voteSchema.methods.esVotoValido = function() {
 };
 
 //Metodos estaticos
-voteSchema.s
+//voteSchema.s
 
 export const Vote = mongoose.model<IVote>('Vote', voteSchema);
