@@ -40,4 +40,15 @@ const voteSchema = new Schema<IVote>({
 //Indices para mejorar la performance
 voteSchema.index({ userId: 1, matchId: 1}, { unique: true });
 
+//Metodos del modelo
+//Metodo para ver si el voto es valido
+voteSchema.methods.esVotoValido = function() {
+  const ahora = new Date();
+  const horasDesdeVoto = (ahora.getTime() - this.fechaVoto.getTime()) / (1000 * 60 * 60);
+  return horasDesdeVoto <= 24;
+};
+
+//Metodos estaticos
+voteSchema.s
+
 export const Vote = mongoose.model<IVote>('Vote', voteSchema);
