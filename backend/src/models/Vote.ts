@@ -37,4 +37,7 @@ const voteSchema = new Schema<IVote>({
   timestamps: true
 })
 
+//Indices para mejorar la performance
+voteSchema.index({ userId: 1, matchId: 1}, { unique: true });
+
 export const Vote = mongoose.model<IVote>('Vote', voteSchema);
