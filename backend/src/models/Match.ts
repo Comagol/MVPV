@@ -112,3 +112,6 @@ matchSchema.statics.obtenerPartidosActivos = function() {
   .sort({ fecha: 1 })
   .lean();
 };
+
+
+export const Match = mongoose.model<IMatch>('Match', matchSchema);
