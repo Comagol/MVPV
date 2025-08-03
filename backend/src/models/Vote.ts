@@ -49,6 +49,11 @@ voteSchema.methods.esVotoValido = function() {
 };
 
 //Metodos estaticos
-//voteSchema.s
+voteSchema.statics.obtenerVotosPorPartido = function(matchId: mongoose.Types.ObjectId) {
+  return this.find({ matchId })
+  .populate('userId', 'nombre email')
+  .populate('playerId', 'nombre apodo')
+  .sort({ fechaVoto: -1 })
+};
 
 export const Vote = mongoose.model<IVote>('Vote', voteSchema);
