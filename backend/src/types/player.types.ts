@@ -21,7 +21,7 @@ export interface UpdatePlayerRequest {
   activo?: boolean;
 }
 
-// Tipos para obtener un jugador
+// Tipos para respuesta de un jugador
 export interface PlayerResponse {
   id: string;
   nombre: string;
@@ -35,14 +35,14 @@ export interface PlayerResponse {
   fechaRegistro: Date;
 }
 
-// Tipos para obtener la lista de jugadores
+// Tipos para respuesta de la lista de jugadores
 export interface PlayerListResponse {
   jugadores: PlayerResponse[];
   total: number;
   camada?: number;
 }
 
-// Tipos para obtener las estadisticas de un jugador
+// Tipos para respuesta de las estadisticas de un jugador
 export interface PlayerStatistics {
   id: string;
   nombre: string;
@@ -50,7 +50,7 @@ export interface PlayerStatistics {
   totalVotos: number;
 }
 
-// Tipos para la paginacion de la lista de jugadores
+// Tipos para paginacion de la lista de jugadores
 export interface PlayerPagination {
   page: number;
   limit: number;
