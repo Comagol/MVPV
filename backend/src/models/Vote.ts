@@ -56,4 +56,26 @@ voteSchema.statics.obtenerVotosPorPartido = function(matchId: mongoose.Types.Obj
   .sort({ fechaVoto: -1 })
 };
 
+//Metodo para verificar si el usuario ya ha votado
+voteSchema.statics.verficarVoto = function(userId: mongoose.Types.ObjectId, matchId: mongoose.Types.ObjectId) {
+  return this.findOne({ userId, matchId});
+};
+
+//Contar votos por jugador en un partido
+voteSchema.statics.contarVotosPorJugador = function(playerId: mongoose.Types.ObjectId, matchId: mongoose.Types.ObjectId) {
+  return this.countDocuments({ playerId, matchId });
+};
+
+//metodo para obtener las estadisticas del partido
+voteSchema.statics.obtenerEstadisticasPartido = function(matchId: mongoose.Types.ObjectId) {
+  return this.aggregate([
+    { $match: { matchId } },
+    { $group: {
+      _id: '$playerId',
+      totalVotos: { $sum: 1 },
+    }},
+    { $sort: { totalVotos: -1 }}
+  ]);
+};
+
 export const Vote = mongoose.model<IVote>('Vote', voteSchema);
