@@ -1,9 +1,11 @@
+// tipos para crear un voto
 export interface VoteRequest {
   playerId: string;
   matchId: string;
   token: string;
 }
 
+// tipos para respuesta de un voto
 export interface VoteResponse {
   id: string;
   playerId: string;
@@ -11,6 +13,7 @@ export interface VoteResponse {
   fechaVoto: Date;
 }
 
+// tipos para estadisticas de votos
 export interface VoteStatistics {
   playerId: string;
   playerName: string;
@@ -18,6 +21,7 @@ export interface VoteStatistics {
   porcentaje: number;
 }
 
+// tipos para respuesta de validacion de votos
 export interface VoteValidationResponse {
   puedeVotar: boolean;
   razon?: string;
