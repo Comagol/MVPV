@@ -1,9 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 //Creo la interfaz para TypeScript
 export interface IUser extends Document {
   email: string;
   nombre: string;
+  password: string;
   fechaRegistro: Date;
   ultimoVoto?: Date;
   votosRealizados: number;
@@ -26,6 +28,12 @@ const userSchema = new Schema({
     required: true,
     trim: true,
     maxLength: 100
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+    maxlength: 100
   },
   fechaRegistro: {
     type: Date,
@@ -78,6 +86,30 @@ userSchema.methods.puedeVotar = function() {
   //Si ha votado, verifica si han pasado 24 horas
   const horasDesdeUltimoVoto = (Date.now() - this.ultimoVoto.getTime()) / (1000 * 60 * 60);
   return horasDesdeUltimoVoto >= 24;
+};
+
+// Agregar método para verificar password
+userSchema.methods.verificarPassword = async function(password: string): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
+
+// Agregar middleware para encriptar password
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  
+  try {
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+  } catch (error) {
+    next(error as Error);
+  }
+});
+
+// Agregar middleware para no devolver password
+userSchema.methods.toJSON = function() {
+  const userObject = this.toObject();
+  delete userObject.password;
+  return userObject;
 };
 
 //Creo el modelo de usuario
