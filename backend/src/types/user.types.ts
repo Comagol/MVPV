@@ -28,3 +28,20 @@ export interface UpdatePasswordRequest {
   currentPassword: string;
   newPassword: string;
 }
+
+// tipo para respuesta de usuario
+export interface UserResponse {
+  id: string;
+  email: string;
+  nombre: string;
+  votosRealizados: number;
+  ultimoVoto?: Date;
+  activo: boolean;
+}
+
+// tipo para validacion de usuario
+export interface UserValidation {
+  puedeVotar: boolean;
+  razon?: string;
+  tiempoRestante?: number;
+}
