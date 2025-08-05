@@ -12,3 +12,22 @@ export interface SuccessResponse<T> {
   data: T;
   message?: string;
 }
+
+//Tipos para respuesta de error
+export interface ErrorResponse {
+  success: false;
+  error: string;
+  code?: string;
+  details?: any;
+}
+
+//tipos para respuestas paginadas
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
