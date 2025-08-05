@@ -31,3 +31,16 @@ export interface PaginatedResponse<T> {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 }
+
+//tipos para validacion de campos
+export interface ValidationError {
+  field: string;
+  message: string;
+  value?: any;
+}
+
+//tipos para respuestas de validacion
+export interface ValidationResponse {
+  isValid: boolean;
+  errors?: ValidationError[];
+}
