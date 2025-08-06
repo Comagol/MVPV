@@ -1,3 +1,4 @@
+import { match } from "assert";
 import { Match, IMatch } from "../models/Match";
 import { CreateMatchRequest, UpdateMatchRequest, MatchResponse } from "../types/match.types" ;
 
@@ -65,5 +66,40 @@ export class MatchDao {
     ).populate('jugadores ganador');
   }
 
-  
+  //incrementar votos del partido
+  async incrementVotes(id: string): Promise<IMatch | null> {
+    return await Match.findByIdAndUpdate(
+      id,
+      { $inc: { votos: 1 }},
+      { new: true }
+    )
+  }
+
+  //Verificar si la votacion esta abierta
+  async isVotingOpen(id: string): Promise<boolean> {
+    const match = await Match.findById(id);
+    if(!match) return false;
+    
+    return match.estado === 'en_proceso' &&
+    match.fechaVotacion >= new Date();
+  }
+
+  //Obtener partido que esta activo para votar
+  async getActiveMatchForVoting(): Promise<IMatch | null> {
+    return await Match.findOne({
+      estado: 'en_proceso',
+      fechaVotacion: { $lte: new Date() }
+    })
+    .populate('jugadores')
+    .sort({ fechaVotacion: 1 });
+  }
+
+  //Obtener partidos programados
+  async getScheduleMatches(): Promise<IMatch[]> {
+    return await Match.find({
+      estado: 'programado'
+    })
+    .populate('jugadores')
+    .sort({ fecha: 1 });
+  }
 }
