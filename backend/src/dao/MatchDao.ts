@@ -1,6 +1,5 @@
-import { match } from "assert";
 import { Match, IMatch } from "../models/Match";
-import { CreateMatchRequest, UpdateMatchRequest, MatchResponse } from "../types/match.types" ;
+import { CreateMatchRequest, UpdateMatchRequest } from "../types/match.types" ;
 
 export class MatchDao {
 
@@ -101,5 +100,53 @@ export class MatchDao {
     })
     .populate('jugadores')
     .sort({ fecha: 1 });
+  }
+
+  //buscar partidos por fecha
+  async searchMatchesByDate(date: Date, endDate: Date): Promise<IMatch[]> {
+    return await Match.find({
+      fecha: {
+        $gte: date,
+        $lte: endDate
+      }
+    })
+    .populate('jugadores ganador')
+    .sort({ fecha: -1 });
+  }
+
+  //obtener estadisticas de partidos
+  async getMatchStatistics(): Promise<any> {
+    return await Match.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalPartidos: { $sum: 1 },
+          partidosFinalizados: {
+            $sum: { $cond: [{ $eq: ['$estado', 'finalizado']}, 1, 0] }
+          },
+          partidosEnProceso: {
+            $sum: { $cond: [{ $eq: ['estado', 'en_proceso']}, 1, 0] }
+          },
+          totalVotos: { $sum: '$votos'}
+        }
+      }
+    ]);
+  }
+
+  //Verificar si un jugador pertenece al partido
+  async isPlayerInMatch(matchId: string, playerId: string): Promise<boolean> {
+    const match = await Match.findById(matchId);
+    if(!match) return false;
+
+    return match.jugadores.some((jugador: any) => jugador._id.toString() === playerId);
+  }
+
+  //Obtener partidos por jugador
+  async findByPlayer(playerId: string): Promise<IMatch[]> {
+    return await Match.find({
+      jugadores: playerId
+    })
+    .populate('jugadores ganador')
+    .sort({ fecha: -1 });
   }
 }
