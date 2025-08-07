@@ -1,7 +1,7 @@
 import { Player, IPlayer } from "../models/Player";
-import { CreatePlayerRequest, UpdatePlayerRequest, PlayerResponse } from "../types/player.types";
+import { CreatePlayerRequest, UpdatePlayerRequest } from "../types/player.types";
 
-export class PlayerDap {
+export class PlayerDao {
 
   //Crear un nuevo jugador
   async createPlayer(playerData: CreatePlayerRequest): Promise<IPlayer> {
