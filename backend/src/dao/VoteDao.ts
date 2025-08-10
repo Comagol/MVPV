@@ -118,4 +118,15 @@ export class VoteDao {
 
     return getWinner.length > 0? getWinner[0] : null;
   }
+
+  //obtener el total de votos de un partido
+  async getTotalVotes(matchId: string): Promise<number> {
+    return await Vote.countDocuments({ matchId });
+  }
+
+  //eliminar votos de un partido
+  async deleteVotesByMatch(matchId: string): Promise<number> {
+    const result = await Vote.deleteMany({ matchId });
+    return result.deletedCount || 0;
+  }
 }
