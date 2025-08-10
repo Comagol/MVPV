@@ -91,4 +91,31 @@ export class VoteDao {
     ]);
   }
 
+  //obtener al ganador de un partido
+  async getMatchWinner(matchId: string): Promise<any> {
+    const getWinner = await Vote.aggregate([
+      { $match: { matchId }},
+      { $group: {
+        _id: '$playerId',
+        totalVotos: { $sum: 1 }
+      }},
+      { $sort: { totalVotos: -1 }},
+      { $limit: 1 },
+      { $lookup: {
+        from: 'players',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'player'
+      }},
+      { $unwind: '$player' },
+      { $project: {
+        playerId: '$_id',
+        playerName: '$player.nombre',
+        playerApodo: '$player.apodo',
+        totalVotos: 1
+      }}
+    ]);
+
+    return getWinner.length > 0? getWinner[0] : null;
+  }
 }
