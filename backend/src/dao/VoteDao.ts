@@ -1,3 +1,4 @@
+import { Match } from "../models/Match";
 import { Vote, IVote } from "../models/Vote";
 import { VoteRequest, VoteResponse, VoteStatistics } from "../types/vote.types";
 
@@ -20,8 +21,8 @@ export class VoteDao {
   }
 
   //Verificar si un usuario ya voto en un partido
-  async hasVoted(playerId: string, matchId: string): Promise<IVote | null> {
-    return await Vote.findOne({ playerId, matchId});
+  async hasVoted(userId: string, matchId: string): Promise<IVote | null> {
+    return await Vote.findOne({ userId, matchId});
   }
 
   //Obtener votos por partido
@@ -40,10 +41,10 @@ export class VoteDao {
     .sort({ fechaVoto: -1 });
   }
 
-  // Obtener votos por jugador de un partido especifico
+  // Obtener votos por jugador de un partido especifico⚠️
   async findByPlayerInMatch(matchId: string, playerId: string): Promise<IVote[]> {
     return await Vote.find({ matchId, playerId })
-    .populate('userId', ' nombre email')
+    .populate('userId', 'nombre email')
     .sort({ fechaVoto: -1 })
   }
 
@@ -128,5 +129,42 @@ export class VoteDao {
   async deleteVotesByMatch(matchId: string): Promise<number> {
     const result = await Vote.deleteMany({ matchId });
     return result.deletedCount || 0;
+  }
+
+  //Verificar si la votacion esta abierta
+  async isVotingOpen(matchId: string): Promise<boolean> {
+    const match = await Match.findById(matchId);
+    if (!match) return false;
+    
+    const now = new Date();
+    return match.estado === 'en_proceso' && 
+           match.fechaVotacion <= now && 
+           now <= new Date(match.fechaVotacion.getTime() + 3 * 60 * 60 * 1000);
+  }
+
+  // obtener los votos en vivo
+  async getLiveVotingStats(matchId: string): Promise<any[]> {
+    return await Vote.aggregate([
+      { $match: { matchId }},
+      { $group: {
+        _id: '$playerId',
+        totalVotos: { $sum: 1 }
+      }},
+      { $lookup: {
+        from: 'players',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'player'
+      }},
+      { $unwind: '$player' },
+      { $project: {
+        playerId: '$_id',
+        nombre: '$player.nombre',
+        apodo: '$player.apodo',
+        totalVotos: 1,
+        porcentaje: { $multiply: [{ $divide: ['$totalVotos', { $sum: 'totalVotos'}]}, 100]}
+      }},
+      { $sort: { totalVotos: -1 } }
+    ]);
   }
 }
