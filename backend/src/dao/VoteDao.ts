@@ -1,6 +1,6 @@
 import { Match } from "../models/Match";
 import { Vote, IVote } from "../models/Vote";
-import { VoteRequest, VoteResponse, VoteStatistics } from "../types/vote.types";
+import { VoteRequest, VoteStatistics } from "../types/vote.types";
 
 export class VoteDao {
 
@@ -162,7 +162,7 @@ export class VoteDao {
         nombre: '$player.nombre',
         apodo: '$player.apodo',
         totalVotos: 1,
-        porcentaje: { $multiply: [{ $divide: ['$totalVotos', { $sum: 'totalVotos'}]}, 100]}
+        porcentaje: { $multiply: [{ $divide: ['$totalVotos', { $sum: '$totalVotos'}]}, 100]}
       }},
       { $sort: { totalVotos: -1 } }
     ]);
