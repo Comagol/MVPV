@@ -52,6 +52,43 @@ export class VoteDao {
     return await Vote.countDocuments({ matchId, playerId });
   }
 
-  
+  // obtener estadisticas de votacion de un partido
+  async getMatchVotingStats(matchId: string): Promise<VoteStatistics[]> {
+    return await Vote.aggregate([
+      { $match: { matchId }},
+      { $group: {
+        _id: '$playerId',
+        totalVotos: { $sum: 1 }
+      }},
+      { $sort: { totalVotos: -1 }},
+    ]);
+  }
+
+  // obtener estadisticas detalladas con nombres de jugadores
+  async getDetailedMatchStats(matchId: string): Promise<any[]> {
+    return await Vote.aggregate([
+      { $match: { matchId }},
+      { $group: {
+        _id: '$playerId',
+        totalVotos: { $sum: 1 },
+        ultimoVoto: { $max: '$fechaVoto' }
+      }},
+      { $lookup: {
+        from: 'players',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'player'
+      }},
+      { $unwind: '$player' },
+      { $project: {
+        playerId: '$_id',
+        nombre: '$player.nombre',
+        apodo: '$player.apodo',
+        totalVotos: 1,
+        ultimoVoto: 1
+      }},
+      { $sort: { totalVotos: -1 } }
+    ]);
+  }
 
 }
