@@ -1,4 +1,3 @@
-import { Match } from "../models/Match";
 import { Vote, IVote } from "../models/Vote";
 import { VoteRequest, VoteStatistics } from "../types/vote.types";
 
@@ -129,17 +128,6 @@ export class VoteDao {
   async deleteVotesByMatch(matchId: string): Promise<number> {
     const result = await Vote.deleteMany({ matchId });
     return result.deletedCount || 0;
-  }
-
-  //Verificar si la votacion esta abierta
-  async isVotingOpen(matchId: string): Promise<boolean> {
-    const match = await Match.findById(matchId);
-    if (!match) return false;
-    
-    const now = new Date();
-    return match.estado === 'en_proceso' && 
-           match.fechaVotacion <= now && 
-           now <= new Date(match.fechaVotacion.getTime() + 3 * 60 * 60 * 1000);
   }
 
   // obtener los votos en vivo

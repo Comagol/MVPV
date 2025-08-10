@@ -37,5 +37,11 @@ export class UserDao {
     );
   }
 
+  // verificar si el usuario puede votar
+  async isActive(id: string): Promise<boolean> {
+    const user = await User.findById(id);
+    return user ? user.activo : false;
+  }
+
   
 }
