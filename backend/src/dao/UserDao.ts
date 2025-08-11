@@ -1,5 +1,5 @@
 import { User, IUser } from "../models/User";
-import { CreateUserRequest, UserResponse } from "../types/user.types";
+import { CreateUserRequest, UpdateUserRequest, UserResponse } from "../types/user.types";
 import bcrypt from 'bcryptjs';
 
 export class UserDao {
@@ -30,11 +30,20 @@ export class UserDao {
     return await User.find({ activo: true }).sort({ nombre: 1});
   }
 
+  //Verificar si el email ya esta en uso
+  async emailExists(email: string): Promise<boolean> {
+    const user = await User.findOne({ email: email.toLowerCase() });
+    return !!user;
+  }
+
   //actualizar usuario
-  async updateUser(id: string, updateData: Partial<IUser>): Promise<IUser | null> {
+  async updateUser(id: string, updateData: UpdateUserRequest): Promise<IUser | null> {
     return await User.findByIdAndUpdate(
       id,
-      updateData,
+      {
+        nombre: updateData.nombre,
+        email: updateData.email,
+      },
       { new: true }
     );
   }

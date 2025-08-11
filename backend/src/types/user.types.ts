@@ -29,6 +29,12 @@ export interface UpdatePasswordRequest {
   newPassword: string;
 }
 
+// tipo para actualizar un usuario
+export interface UpdateUserRequest {
+  nombre?: string;
+  email?: string;
+}
+
 // tipo para respuesta de usuario
 export interface UserResponse {
   id: string;
