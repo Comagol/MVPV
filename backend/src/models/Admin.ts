@@ -65,4 +65,4 @@ adminSchema.methods.toJSON = function () {
   return adminObject;
 };
 
-export default mongoose.model<IAdmin>('Admin', adminSchema);
+export const Admin = mongoose.model<IAdmin>('Admin', adminSchema);
