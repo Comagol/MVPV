@@ -150,7 +150,7 @@ export class VoteDao {
         nombre: '$player.nombre',
         apodo: '$player.apodo',
         totalVotos: 1,
-        porcentaje: { $multiply: [{ $divide: ['$totalVotos', { $sum: '$totalVotos'}]}, 100]}
+        porcentaje: { $multiply: [{ $divide: ['$totalVotos', { $sum: '$totalVotos' }] }, 100] }
       }},
       { $sort: { totalVotos: -1 } }
     ]);

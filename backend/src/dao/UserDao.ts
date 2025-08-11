@@ -25,12 +25,26 @@ export class UserDao {
     return await User.find().sort({ nombre: 1});
   }
 
+  //obtener usuarios activos
+  async findActiveUsers(): Promise<IUser[]> {
+    return await User.find({ activo: true }).sort({ nombre: 1});
+  }
+
+  //actualizar usuario
+  async updateUser(id: string, updateData: Partial<IUser>): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    );
+  }
+
   // incrementar votos de un usuario
   async incrementVotes(id: string): Promise<IUser | null> {
     return await User.findByIdAndUpdate(
       id,
       {
-        $inc: { votos: 1},
+        $inc: { votosRealizados: 1},
         ultimoVoto: new Date()
       },
       { new: true }
@@ -43,5 +57,38 @@ export class UserDao {
     return user ? user.activo : false;
   }
 
-  
+ // activar a un usuario
+ async activateUser(id: string): Promise<IUser | null> {
+  return await User.findByIdAndUpdate(id, { activo: true }, { new: true });
+ }
+
+  // desactivar a un usuario
+  async deactivateUser(id: string): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(id, { activo: false }, { new: true });
+  }
+
+  // verificar credenciales para el login
+  async verifyCredentials(email: string, password: string): Promise<IUser | null> {
+  const user = await User.findOne({ email: email.toLowerCase() });
+  if (!user) return null;
+
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  return isValidPassword ? user : null;
+  }
+
+  // Cambiar contraseña de un usuario
+  async changePassword(id: string, currentPassword: string, newPassword: string): Promise<boolean> {
+    const user = await User.findById(id);
+    if (!user) return false;
+
+    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!isValidPassword) return false;
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+    return true;
+  }
+
 }
