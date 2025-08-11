@@ -1,7 +1,8 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 
 // Creo la interfase para Typescript
 export interface IPlayer extends Document {
+  _id: Types.ObjectId;
   nombre: string;
   apodo: string;
   posicion: string;

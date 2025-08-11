@@ -59,8 +59,8 @@ export class PlayerDao {
     return await Player.find({
       activo: true,
       $or: [
-        { nombre: { $regex: searchTerm, $options: 'i '}},
-        { apodo: { $regex: searchTerm, $options: 'i '}}        
+        { nombre: { $regex: searchTerm, $options: 'i'}},
+        { apodo: { $regex: searchTerm, $options: 'i'}}        
       ]
     }).sort({ nombre: 1 });
   }
@@ -69,7 +69,7 @@ export class PlayerDao {
   async incrementVotes(id: string): Promise<IPlayer | null> {
     return await Player.findByIdAndUpdate(
       id,
-      { $inc: { votos: 1 }},
+      { $inc: { votos: 1 } },
       { new: true }
     );
   }
@@ -85,6 +85,20 @@ export class PlayerDao {
         promedioVotos: { $avg: '$votos' }
       }}
     ]);
+  }
+
+  //buscar jugador por nombre y camada
+  async findByNombreAndCamada(nombre: string, camada: number, excludeId?: string): Promise<IPlayer | null> {
+    const query: any = { 
+      nombre: nombre.toLowerCase(), 
+      camada 
+    };
+    
+    if (excludeId) {
+      query._id = { $ne: excludeId };
+    }
+    
+    return await Player.findOne(query);
   }
 
 }
