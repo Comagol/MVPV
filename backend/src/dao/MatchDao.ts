@@ -16,7 +16,7 @@ export class MatchDao {
 
   //obtener todos los partidos
   async findAll(): Promise<IMatch[]> {
-    return await Match.find().populate(' jugadores ganador');
+    return await Match.find().populate('jugadores ganador');
   }
 
   //obtener partidos activos(en proceso o programados)
@@ -34,7 +34,7 @@ export class MatchDao {
     return await Match.find({
       estado: 'finalizado'
     })
-    .populate( 'jugadores ganador' )
+    .populate('jugadores ganador')
     .sort({ fecha: -1 });
   }
 
@@ -69,7 +69,7 @@ export class MatchDao {
   async incrementVotes(id: string): Promise<IMatch | null> {
     return await Match.findByIdAndUpdate(
       id,
-      { $inc: { votos: 1 }},
+      { $inc: { totalVotos: 1 }},
       { new: true }
     )
   }
@@ -127,7 +127,7 @@ export class MatchDao {
           partidosEnProceso: {
             $sum: { $cond: [{ $eq: ['estado', 'en_proceso']}, 1, 0] }
           },
-          totalVotos: { $sum: '$votos'}
+          totalVotos: { $sum: '$totalVotos'}
         }
       }
     ]);

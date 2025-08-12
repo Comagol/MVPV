@@ -5,7 +5,6 @@ import { Vote } from './Vote';
 //Creo la interfaz para TypesCript
 export interface IMatch extends Document {
   fecha: Date;
-  camada: number;
   estado: 'programado' | 'en_proceso' | 'finalizado';
   jugadores: IPlayer[];
   ganador?: IPlayer;
@@ -20,10 +19,6 @@ const matchSchema = new Schema<IMatch>({
     type: Date,
     required: true,
     },
-    camada: {
-    type: Number,
-    required: true
-  },
   estado: {
     type: String,
     required: true,
@@ -59,8 +54,7 @@ const matchSchema = new Schema<IMatch>({
 });
 
 //Indices para mejorar la performance
-matchSchema.index({ fecha: 1, camada: 1});
-matchSchema.index({ camada: 1});
+matchSchema.index({ fecha: 1});
 
 //Metodos del modelo
 matchSchema.methods.incrementarVotos = function() {
