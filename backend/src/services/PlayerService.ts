@@ -70,4 +70,16 @@ export class PlayerService {
     const updatedPlayer = await this.playerDao.updatePlayer(id, updateData);
     return updatedPlayer ? this.formatPlayerResponse(updatedPlayer) : null;
   }
+
+  //eliminar un jugador
+  async deletePlayer(id: string): Promise<boolean> {
+    const deletedPlayer = await this.playerDao.deletePlayer(id);
+    return !!deletedPlayer;
+  }
+
+  //obtener top 3 jugadores
+  async getTopThreePlayers(): Promise<PlayerResponse[]> {
+    const players = await this.playerDao.getTopThreePlayers();
+    return players.slice(0, 3).map(player => this.formatPlayerResponse(player));
+  }
 }

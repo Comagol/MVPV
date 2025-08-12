@@ -48,10 +48,10 @@ export class PlayerDao {
   }
 
   //Obtener top 10 jugadores
-  async getTopTenPlayers(): Promise<IPlayer[]> {
+  async getTopThreePlayers(): Promise<IPlayer[]> {
     return await Player.find({ activo: true })
     .sort({ votos: -1 })
-    .limit(10);
+    .limit(3);
   }
 
   //Buscar jugadores por nombre o apodo
