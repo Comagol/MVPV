@@ -80,7 +80,7 @@ export class PlayerService {
   //obtener top 3 jugadores
   async getTopThreePlayers(): Promise<PlayerResponse[]> {
     const players = await this.playerDao.getTopThreePlayers();
-    return players.slice(0, 3).map(player => this.formatPlayerResponse(player));
+    return players.map(player => this.formatPlayerResponse(player));
   }
 
   //incrementar votos de un jugador
