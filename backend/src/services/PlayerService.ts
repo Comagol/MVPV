@@ -54,4 +54,20 @@ export class PlayerService {
     const players = await this.playerDao.findActivePlayers();
     return players.map(player => this.formatPlayerResponse(player));
   }
+
+  //obtener jugadores por camada
+  async getPlayersByCamada(camada: number): Promise<PlayerResponse[]> {
+    const players = await this.playerDao.findByCamada(camada);
+    return players.map(player => this.formatPlayerResponse(player));
+  }
+
+  //actualizar un jugador
+  async updatePlayer(id: string, updateData: UpdatePlayerRequest): Promise<PlayerResponse | null> {
+    const currentPlayer = await this.playerDao.findById(id);
+    if (!currentPlayer) {
+      throw new Error(`No se encontro al jugador`);
+    }
+    const updatedPlayer = await this.playerDao.updatePlayer(id, updateData);
+    return updatedPlayer ? this.formatPlayerResponse(updatedPlayer) : null;
+  }
 }
