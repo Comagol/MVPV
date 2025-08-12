@@ -82,4 +82,15 @@ export class PlayerService {
     const players = await this.playerDao.getTopThreePlayers();
     return players.slice(0, 3).map(player => this.formatPlayerResponse(player));
   }
+
+  //incrementar votos de un jugador
+  async incrementVotes(id: string): Promise<PlayerResponse | null> {
+    const votedPlayer = await this.playerDao.incrementVotes(id);
+    return votedPlayer ? this.formatPlayerResponse(votedPlayer) : null;
+  }
+
+  //obtener estadisticas de los jugadores
+  async getStatistics(): Promise<any> {
+    return await this.playerDao.getStatistics();
+  }
 }
