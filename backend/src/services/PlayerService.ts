@@ -42,4 +42,16 @@ export class PlayerService {
     //retornar la respuesta formateada
     return this.formatPlayerResponse(player);
   }
+
+  // obtener un jugador por su id
+  async getPlayerById(id: string): Promise<PlayerResponse | null> {
+  const player = await this.playerDao.findById(id);
+  return player ? this.formatPlayerResponse(player) : null;
+  }
+
+  // Obtener todos los jugadores activos
+  async getActivePlayers(): Promise<PlayerResponse[]> {
+    const players = await this.playerDao.findActivePlayers();
+    return players.map(player => this.formatPlayerResponse(player));
+  }
 }
