@@ -45,5 +45,18 @@ export class MatchService {
     }
   }
 
-  
+  // Crear un nuevo partido
+  async createMatch(matchData: CreateMatchRequest): Promise<MatchResponse> {
+    //valido que no haya mas de 23 jugadores;
+    if(matchData.jugadores.length > 23){
+      throw new Error('No se puede crear un partido con mas de 23 jugadores');
+    }
+    if(matchData.jugadores.length < 15) {
+      throw new Error('No se puede crear un partido con menos de 15 jugadores');
+    }
+    // creo el partido en la base de datos
+    const match = await this.matchDao.createMatch(matchData);
+    // retorno la respuesta formateada
+    return this.formatMatchResponse(match);
+  }
 }
