@@ -6,7 +6,6 @@ export interface CreateMatchRequest {
   fecha: Date;
   jugadores: string[];
   description: string;
-  fechaVotacion: Date;
 }
 
 //creo y exporto los tipos para actualizar un partido
@@ -15,7 +14,6 @@ export interface UpdateMatchRequest {
   jugadores?: string[];
   description?: string;
   estado?: 'programado' | 'en_proceso' | 'finalizado';
-  fechaVotacion?: Date;
 }
 
 //creo y exporto los tipos para respuesta de un partido
@@ -27,7 +25,6 @@ export interface MatchResponse {
   ganador?: PlayerResponse;
   description: string;
   totalVotos: number;
-  fechaVotacion: Date;
   fechaCreacion: Date;
 }
 

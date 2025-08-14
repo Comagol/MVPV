@@ -9,7 +9,6 @@ export interface IMatch extends Document {
   ganador?: IPlayer;
   descripcion?: string;
   totalVotos: number;
-  fechaVotacion: Date; 
 }
 
 //Creo el Schema del partido
@@ -43,10 +42,6 @@ const matchSchema = new Schema<IMatch>({
     type: Number,
     default: 0,
     min: 0
-  },
-  fechaVotacion: {
-    type: Date,
-    default: Date.now
   }
 }, {
   timestamps: true

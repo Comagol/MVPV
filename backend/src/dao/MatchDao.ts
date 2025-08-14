@@ -22,8 +22,7 @@ export class MatchDao {
   //obtener partidos activos(en proceso o programados)
   async findActiveMatches(): Promise<IMatch[]> {
     return await Match.find({
-      estado: 'en_proceso',
-      fechaVotacion: { $gte: new Date() }
+      estado: 'en_proceso'
     })
     .populate('jugadores ganador')
     .sort({ fecha: 1 });
@@ -78,18 +77,16 @@ export class MatchDao {
   async isVotingOpen(id: string): Promise<boolean> {
     const match = await Match.findById(id);
     if(!match) return false;
-  
     return match.estado === 'en_proceso';
   }
 
   //Obtener partido que esta activo para votar
   async getActiveMatchForVoting(): Promise<IMatch | null> {
     return await Match.findOne({
-      estado: 'en_proceso',
-      fechaVotacion: { $lte: new Date() }
+      estado: 'en_proceso'
     })
     .populate('jugadores ganador')
-    .sort({ fechaVotacion: 1 });
+    .sort({ fecha: 1 });
   }
 
   //Obtener partidos programados
