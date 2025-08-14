@@ -59,4 +59,12 @@ export class MatchService {
     // retorno la respuesta formateada
     return this.formatMatchResponse(match);
   }
+
+  // obtener todos los partidos
+  async getAllMatches(): Promise<MatchResponse[]> {
+    // obtengo todos los partidos de la DB
+    const matches = await this.matchDao.findAll();
+    // retorno la respuesta formateada
+    return matches.map(match => this.formatMatchResponse(match));
+  };
 }
