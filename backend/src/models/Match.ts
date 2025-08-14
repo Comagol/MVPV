@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IPlayer } from './Player';
-import { Vote } from './Vote';
 
 //Creo la interfaz para TypesCript
 export interface IMatch extends Document {
@@ -55,57 +54,7 @@ const matchSchema = new Schema<IMatch>({
 
 //Indices para mejorar la performance
 matchSchema.index({ fecha: 1});
-
-//Metodos del modelo
-matchSchema.methods.incrementarVotos = function() {
-  this.totalVotos += 1;
-  return this.save();
-};
-
-//Metodo para iniciar un partido
-matchSchema.methods.iniciarPartido = function() {
-  this.estado = 'en_proceso';
-  return this.save();
-};
-
-//Metodo para finalizar un partido
-matchSchema.methods.finalizarPartido = function() {
-  this.estado = 'finalizado';
-  return this.save();
-};
-
-//MEtodo para verificar si el partido esta en curso para votar
-matchSchema.methods.votacionAbierta = function() {
-  return this.estado === 'en_proceso' && this.fechaVotacion > new Date();
-};
-
-matchSchema.methods.calcularGanador = async function() {
-  const jugadorGanador = await Vote.aggregate([
-    { $match: { matchId: this._id } },
-    { $group: { _id: '$playerId', count: { $sum: 1 } } },
-    { $sort: { count: -1 } },
-    { $limit: 1 }
-  ]);
-
-  if (jugadorGanador.length === 0) {
-    throw new Error('No hay votos registrados para este partido');
-  } else {
-    this.ganador = jugadorGanador[0]._id;
-    this.estado = 'finalizado';
-    return this.save();
-  }
-};
-
-//Metodo para obtener partidos activos
-matchSchema.statics.obtenerPartidosActivos = function() {
-  return this.find({
-    estado: 'en_proceso',
-    fechaVotacion: { $gt: new Date() }
-  })
-  .populate('jugadores')
-  .sort({ fecha: 1 })
-  .lean();
-};
+matchSchema.index({ estado: 1});
 
 
 export const Match = mongoose.model<IMatch>('Match', matchSchema);

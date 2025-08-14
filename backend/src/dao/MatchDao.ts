@@ -16,7 +16,7 @@ export class MatchDao {
 
   //obtener todos los partidos
   async findAll(): Promise<IMatch[]> {
-    return await Match.find().populate('jugadores ganador');
+    return await Match.find().populate('jugadores ganador').sort({ fecha: -1 });
   }
 
   //obtener partidos activos(en proceso o programados)
@@ -78,9 +78,8 @@ export class MatchDao {
   async isVotingOpen(id: string): Promise<boolean> {
     const match = await Match.findById(id);
     if(!match) return false;
-    
-    return match.estado === 'en_proceso' &&
-    match.fechaVotacion >= new Date();
+  
+    return match.estado === 'en_proceso';
   }
 
   //Obtener partido que esta activo para votar
@@ -102,18 +101,6 @@ export class MatchDao {
     .sort({ fecha: 1 });
   }
 
-  //buscar partidos por fecha
-  async searchMatchesByDate(date: Date, endDate: Date): Promise<IMatch[]> {
-    return await Match.find({
-      fecha: {
-        $gte: date,
-        $lte: endDate
-      }
-    })
-    .populate('jugadores ganador')
-    .sort({ fecha: -1 });
-  }
-
   //obtener estadisticas de partidos
   async getMatchStatistics(): Promise<any> {
     return await Match.aggregate([
@@ -131,22 +118,5 @@ export class MatchDao {
         }
       }
     ]);
-  }
-
-  //Verificar si un jugador pertenece al partido
-  async isPlayerInMatch(matchId: string, playerId: string): Promise<boolean> {
-    const match = await Match.findById(matchId);
-    if(!match) return false;
-
-    return match.jugadores.some((jugador: any) => jugador._id.toString() === playerId);
-  }
-
-  //Obtener partidos por jugador
-  async findByPlayer(playerId: string): Promise<IMatch[]> {
-    return await Match.find({
-      jugadores: playerId
-    })
-    .populate('jugadores ganador')
-    .sort({ fecha: -1 });
   }
 }
