@@ -1,8 +1,9 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types   } from 'mongoose';
 import { IPlayer } from './Player';
 
 //Creo la interfaz para TypesCript
 export interface IMatch extends Document {
+  _id: Types.ObjectId;
   fecha: Date;
   estado: 'programado' | 'en_proceso' | 'finalizado';
   jugadores: IPlayer[];
