@@ -25,7 +25,7 @@ export class MatchDao {
       estado: 'en_proceso',
       fechaVotacion: { $gte: new Date() }
     })
-    .populate('jugadores')
+    .populate('jugadores ganador')
     .sort({ fecha: 1 });
   }
 
@@ -53,7 +53,7 @@ export class MatchDao {
       id,
       { estado: 'en_proceso' },
       { new: true } 
-    ).populate('jugadores');
+    ).populate('jugadores ganador');
   }
 
   //finalizar un partido
@@ -88,7 +88,7 @@ export class MatchDao {
       estado: 'en_proceso',
       fechaVotacion: { $lte: new Date() }
     })
-    .populate('jugadores')
+    .populate('jugadores ganador')
     .sort({ fechaVotacion: 1 });
   }
 
@@ -97,7 +97,7 @@ export class MatchDao {
     return await Match.find({
       estado: 'programado'
     })
-    .populate('jugadores')
+    .populate('jugadores ganador')
     .sort({ fecha: 1 });
   }
 
