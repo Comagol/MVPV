@@ -25,7 +25,6 @@ export interface MatchResponse {
   ganador?: PlayerResponse;
   description: string;
   totalVotos: number;
-  fechaCreacion: Date;
 }
 
 //Creo y exporto los tipos para las estadisticas de un partido

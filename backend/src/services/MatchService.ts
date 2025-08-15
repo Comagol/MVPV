@@ -17,7 +17,6 @@ export class MatchService {
       estado: match.estado,
       description: match.descripcion || '',
       totalVotos: match.totalVotos,
-      fechaCreacion: match.fecha,
       jugadores: match.jugadores.map((player) => ({
         id: player._id.toString(),
         nombre: player.nombre,
@@ -27,20 +26,18 @@ export class MatchService {
         camiseta: player.camiseta,
         camada: player.camada,
         activo: player.activo,
-        votos: player.votos,
-        fechaRegistro: player.fechaRegistro
+        votos: player.votos
       })),
       ganador: match.ganador ? {
         id: match.ganador._id.toString(),
         nombre: match.ganador.nombre,
         apodo: match.ganador.apodo,
         posicion: match.ganador.posicion,
-        imagen: match.ganador.imagen,
+        imagen: match.ganador.imagen, 
         camiseta: match.ganador.camiseta,
         camada: match.ganador.camada,
         activo: match.ganador.activo,
-        votos: match.ganador.votos,
-        fechaRegistro: match.ganador.fechaRegistro
+        votos: match.ganador.votos
       } : undefined
     }
   }
@@ -83,7 +80,7 @@ export class MatchService {
   // obtener partidos activos
   async getActiveMatches(): Promise<MatchResponse[]> {
     // obtengo los partidos activos de la DB
-    const matches = await this.matchDao.findActiveMatches()
+    const matches = await this.matchDao.findActiveMatches();
     // retorno la respuesta formateada
     return matches.map(match => this.formatMatchResponse(match));
   };
@@ -172,6 +169,4 @@ export class MatchService {
     // retorno la respuesta formateada
     return this.formatMatchResponse(match);
   };
-
-
 }

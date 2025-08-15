@@ -32,7 +32,6 @@ export interface PlayerResponse {
   camada: number;
   activo: boolean;
   votos: number;
-  fechaRegistro: Date;
 }
 
 // Tipos para respuesta de la lista de jugadores
