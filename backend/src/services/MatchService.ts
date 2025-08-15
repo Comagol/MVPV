@@ -67,4 +67,18 @@ export class MatchService {
     // retorno la respuesta formateada
     return matches.map(match => this.formatMatchResponse(match));
   };
+
+  // obtener un partido por id
+  async getMatchById(id: string): Promise<MatchResponse | null> {
+    // obtengo el partido por id de la DB
+    const match = await this.matchDao.findById(id);
+    //validacion
+    if(!match) {
+      return null;
+    }
+    // retorno la respuesta formateada
+    return this.formatMatchResponse(match);
+  };
+
+  
 }
