@@ -80,5 +80,19 @@ export class MatchService {
     return this.formatMatchResponse(match);
   };
 
-  
+  // obtener partidos activos
+  async getActiveMatches(): Promise<MatchResponse[]> {
+    // obtengo los partidos activos de la DB
+    const matches = await this.matchDao.findActiveMatches()
+    // retorno la respuesta formateada
+    return matches.map(match => this.formatMatchResponse(match));
+  };
+
+  // obtener los partidos finalizados
+  async getFinishedMatches(): Promise<MatchResponse[]> {
+    // obtengo los partidos finalizados de la DB
+    const matches = await this.matchDao.findFinishedMatches();
+    // retorno la respuesta formateada
+    return matches.map(match => this.formatMatchResponse(match));
+  };
 }
