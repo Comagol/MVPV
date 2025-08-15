@@ -133,4 +133,45 @@ export class MatchService {
     // retorno la respuesta formateada
     return this.formatMatchResponse(updatedMatch);
   };
+
+  // Iniciar un partido
+  async startMatch(id: string): Promise<MatchResponse | null> {
+    // obtengo y valido que el partido exita
+    const currentMatch = await this.matchDao.findById(id);
+    if(!currentMatch) {
+      throw new Error('Partido no encontrado');
+    }
+    // // valido que el estado del currentmatch sea programado
+    if(currentMatch.estado !== 'programado') {
+      throw new Error('no se puede iniciar un partido que no este programado');
+    }
+    // cambio el estado del partido a en_proceso
+    const match = await this.matchDao.startMatch(id);
+    if(!match) {
+      return null;
+    }
+    // retorno la respuesta formateada
+    return this.formatMatchResponse(match);
+  };
+
+  // finalizar un partido
+  async finishMatch(id: string): Promise<MatchResponse | null> {
+    // obtengo y valido que el partido exista
+    const currentMatch = await this.matchDao.findById(id);
+    if(!currentMatch) {
+      throw new Error('Partido no encontrado');
+    }
+    if(currentMatch.estado !== 'en_proceso') {
+      throw new Error('no se puede finalizar un partido que no este en proceso');
+    }
+    // cambio el estado del partido a finalizado
+    const match = await this.matchDao.finishMatch(id);
+    if(!match) {
+      return null;
+    }
+    // retorno la respuesta formateada
+    return this.formatMatchResponse(match);
+  };
+
+
 }
