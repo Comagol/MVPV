@@ -122,4 +122,9 @@ export class VoteService {
       totalVotos: winner.totalVotos
     }
   }
+
+  //obtengo la camtidad total de votos de un partido
+  async getTotalVotes(matchId: string): Promise<number> {
+    return await this.voteDao.getTotalVotes(matchId);
+  }
 }
