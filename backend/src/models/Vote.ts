@@ -1,10 +1,11 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
 //Creo la interfaz para TypesCript
 export interface IVote extends Document {
-  userId: mongoose.Types.ObjectId;
-  playerId: mongoose.Types.ObjectId;
-  matchId: mongoose.Types.ObjectId;
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  playerId: Types.ObjectId;
+  matchId: Types.ObjectId;
   fechaVoto: Date;
   token?: string;
 }
@@ -49,7 +50,7 @@ voteSchema.methods.esVotoValido = function() {
 };
 
 //Metodos estaticos
-voteSchema.statics.obtenerVotosPorPartido = function(matchId: mongoose.Types.ObjectId) {
+  voteSchema.statics.obtenerVotosPorPartido = function(matchId: Types.ObjectId) {
   return this.find({ matchId })
   .populate('userId', 'nombre email')
   .populate('playerId', 'nombre apodo')
@@ -57,17 +58,17 @@ voteSchema.statics.obtenerVotosPorPartido = function(matchId: mongoose.Types.Obj
 };
 
 //Metodo para verificar si el usuario ya ha votado
-voteSchema.statics.verficarVoto = function(userId: mongoose.Types.ObjectId, matchId: mongoose.Types.ObjectId) {
+voteSchema.statics.verficarVoto = function(userId: Types.ObjectId, matchId: Types.ObjectId) {
   return this.findOne({ userId, matchId});
 };
 
 //Contar votos por jugador en un partido
-voteSchema.statics.contarVotosPorJugador = function(playerId: mongoose.Types.ObjectId, matchId: mongoose.Types.ObjectId) {
+voteSchema.statics.contarVotosPorJugador = function(playerId: Types.ObjectId, matchId: Types.ObjectId) {
   return this.countDocuments({ playerId, matchId });
 };
 
 //metodo para obtener las estadisticas del partido
-voteSchema.statics.obtenerEstadisticasPartido = function(matchId: mongoose.Types.ObjectId) {
+voteSchema.statics.obtenerEstadisticasPartido = function(matchId: Types.ObjectId) { 
   return this.aggregate([
     { $match: { matchId } },
     { $group: {
