@@ -6,7 +6,6 @@ export interface IPlayer extends Document {
   nombre: string;
   apodo: string;
   posicion: string;
-  votos: number;
   imagen: string;
   camiseta: number;
   activo: boolean;
@@ -70,13 +69,7 @@ const playerSchema = new Schema<IPlayer>({
   fechaRegistro: {
     type: Date,
     default: Date.now
-  },
-  votos: {
-    type: Number,
-    default: 0,
-    min: 0
   }
-
 }, {
   timestamps: true
 });
@@ -86,25 +79,9 @@ playerSchema.index({ nombre: 1, camada: 1});
 playerSchema.index({ camada: 1});
 
 //Metodos del modelo
-playerSchema.methods.incrementarVotos = function() {
-  this.votos += 1;
-  return this.save();
-};
-
 //Metodo para verificar si el jugador esta activo
 playerSchema.methods.estaActivo = function() {
   return this.activo;
-};
-
-//Metodo para obtener top 3 jugadores
-playerSchema.statics.obtenerTop3 = async function(limit: number = 3) {
-  const topJugadores = await this.find({ activo: true })
-  .sort({ votos: -1 })
-  .limit(limit)
-  .select('nombre apodo votos')
-  .lean();
-
-  return topJugadores;
 };
 
 //exporto el modelo

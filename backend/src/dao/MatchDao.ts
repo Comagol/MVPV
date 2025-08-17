@@ -64,31 +64,6 @@ export class MatchDao {
     ).populate('jugadores ganador');
   }
 
-  //incrementar votos del partido
-  async incrementVotes(id: string): Promise<IMatch | null> {
-    return await Match.findByIdAndUpdate(
-      id,
-      { $inc: { totalVotos: 1 }},
-      { new: true }
-    )
-  }
-
-  //Verificar si la votacion esta abierta
-  async isVotingOpen(id: string): Promise<boolean> {
-    const match = await Match.findById(id);
-    if(!match) return false;
-    return match.estado === 'en_proceso';
-  }
-
-  //Obtener partido que esta activo para votar
-  async getActiveMatchForVoting(): Promise<IMatch | null> {
-    return await Match.findOne({
-      estado: 'en_proceso'
-    })
-    .populate('jugadores ganador')
-    .sort({ fecha: 1 });
-  }
-
   //Obtener partidos programados
   async getScheduleMatches(): Promise<IMatch[]> {
     return await Match.find({

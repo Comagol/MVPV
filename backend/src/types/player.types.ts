@@ -31,7 +31,6 @@ export interface PlayerResponse {
   camiseta: number;
   camada: number;
   activo: boolean;
-  votos: number;
 }
 
 // Tipos para respuesta de la lista de jugadores
@@ -46,13 +45,12 @@ export interface PlayerStatistics {
   id: string;
   nombre: string;
   apodo: string;
-  totalVotos: number;
 }
 
 // Tipos para paginacion de la lista de jugadores
 export interface PlayerPagination {
   page: number;
   limit: number;
-  sort?: 'nombre' | 'votos' | 'apodo' | 'camada';
+  sort?: 'nombre' | 'apodo' | 'camada';
   order?: 'asc' | 'desc';
 }

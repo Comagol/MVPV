@@ -9,7 +9,6 @@ export interface IMatch extends Document {
   jugadores: IPlayer[];
   ganador?: IPlayer;
   descripcion?: string;
-  totalVotos: number;
 }
 
 //Creo el Schema del partido
@@ -38,11 +37,6 @@ const matchSchema = new Schema<IMatch>({
     type: String,
     maxlength: 500,
     trim: true
-  },
-  totalVotos: {
-    type: Number,
-    default: 0,
-    min: 0
   }
 }, {
   timestamps: true

@@ -46,14 +46,7 @@ export class PlayerDao {
     { new: true, runValidators: true }
     );
   }
-
-  //Obtener top 10 jugadores
-  async getTopThreePlayers(): Promise<IPlayer[]> {
-    return await Player.find({ activo: true })
-    .sort({ votos: -1 })
-    .limit(3);
-  }
-
+  
   //Buscar jugadores por nombre o apodo
   async search(searchTerm: string): Promise<IPlayer[]> {
     return await Player.find({
@@ -63,15 +56,6 @@ export class PlayerDao {
         { apodo: { $regex: searchTerm, $options: 'i'}}        
       ]
     }).sort({ nombre: 1 });
-  }
-
-  //Incrementar votos de un jugador
-  async incrementVotes(id: string): Promise<IPlayer | null> {
-    return await Player.findByIdAndUpdate(
-      id,
-      { $inc: { votos: 1 } },
-      { new: true }
-    );
   }
 
   //Obtener estadisticas de jugadores

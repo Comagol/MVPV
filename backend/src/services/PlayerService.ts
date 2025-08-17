@@ -16,8 +16,6 @@ export class PlayerService {
       camiseta: player.camiseta,
       camada: player.camada,
       activo: player.activo,
-      votos: player.votos,
-      fechaRegistro: player.fechaRegistro
     };
   }
 
@@ -75,18 +73,6 @@ export class PlayerService {
   async deletePlayer(id: string): Promise<boolean> {
     const deletedPlayer = await this.playerDao.deletePlayer(id);
     return !!deletedPlayer;
-  }
-
-  //obtener top 3 jugadores
-  async getTopThreePlayers(): Promise<PlayerResponse[]> {
-    const players = await this.playerDao.getTopThreePlayers();
-    return players.map(player => this.formatPlayerResponse(player));
-  }
-
-  //incrementar votos de un jugador
-  async incrementVotes(id: string): Promise<PlayerResponse | null> {
-    const votedPlayer = await this.playerDao.incrementVotes(id);
-    return votedPlayer ? this.formatPlayerResponse(votedPlayer) : null;
   }
 
   //obtener estadisticas de los jugadores

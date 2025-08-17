@@ -16,7 +16,6 @@ export class MatchService {
       fecha: match.fecha,
       estado: match.estado,
       description: match.descripcion || '',
-      totalVotos: match.totalVotos,
       jugadores: match.jugadores.map((player) => ({
         id: player._id.toString(),
         nombre: player.nombre,
@@ -26,7 +25,6 @@ export class MatchService {
         camiseta: player.camiseta,
         camada: player.camada,
         activo: player.activo,
-        votos: player.votos
       })),
       ganador: match.ganador ? {
         id: match.ganador._id.toString(),
@@ -37,7 +35,6 @@ export class MatchService {
         camiseta: match.ganador.camiseta,
         camada: match.ganador.camada,
         activo: match.ganador.activo,
-        votos: match.ganador.votos
       } : undefined
     }
   }
