@@ -97,4 +97,17 @@ export class VoteService {
       puedeVotar: true
     };
   }
+
+  // metodo para obtener las estadisticas de votos de un partido
+  async getMatchVoteStatistics(matchId: string): Promise<VoteStatistics[]> {
+    const stats = await this.voteDao.getDetailedMatchStats(matchId);
+    const totalVotos = await this.voteDao.getTotalVotes(matchId);
+
+    return stats.map(stat => ({
+      playerId: stat.playerId.toString(),
+      playerName: stat.playerName,
+      totalVotos: stat.totalVotos,
+      porcentaje: totalVotos > 0 ? (stat.totalVotos / totalVotos) * 100 : 0
+    }));
+  }
 }
