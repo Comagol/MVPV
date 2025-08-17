@@ -1,5 +1,6 @@
 // tipos para crear un voto
 export interface VoteRequest {
+  userId: string;
   playerId: string;
   matchId: string;
   token: string;
