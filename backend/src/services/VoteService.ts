@@ -67,4 +67,34 @@ export class VoteService {
 
   return this.formatVoteResponse(vote);
   }
+
+  // metodo para verificar si el usuario puede votar
+  async validateVote(userId: string, matchId: string): Promise<VoteValidationResponse> {
+    //valido que el partido exista
+    const match = await this.matchDao.findById(matchId);
+    if(!match) {
+      return {
+        puedeVotar: false,
+        razon: 'partido no encontrado'
+      }
+    }
+    if( match.estado !== 'en_proceso') {
+      return {
+        puedeVotar: false,
+        razon: 'El partido no esta en proceso'
+      }
+    }
+
+    // verificar si el usuario ya ha votado
+    const existingVote = await this.voteDao.hasVoted(userId, matchId);
+    if(existingVote) {
+      return {
+        puedeVotar: false,
+        razon: 'Ya has votado para este partido'
+      }
+    }
+    return {
+      puedeVotar: true
+    };
+  }
 }
