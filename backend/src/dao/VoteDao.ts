@@ -127,4 +127,15 @@ export class VoteDao {
       { $sort: { totalVotos: -1 } }
     ]);
   }
+
+  // obtener el ganador de un partido
+  async getMatchWinner(matchId: string): Promise<any> {
+    return await Vote.aggregate([
+      { $match: { matchId }},
+      { $group: {
+        _id: '$playerId',
+        totalVotos: { $sum: 1 }
+      }},
+    ])
+  }
 }

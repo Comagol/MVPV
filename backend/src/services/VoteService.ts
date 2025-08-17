@@ -110,4 +110,16 @@ export class VoteService {
       porcentaje: totalVotos > 0 ? (stat.totalVotos / totalVotos) * 100 : 0
     }));
   }
+
+  // metodo para obtener al ganador de un partido
+  async getMatchWinner(matchId: string): Promise<{ playerId: string, playerName: string, totalVotos: number } | null> {
+    const winner = await this.voteDao.getMatchWinner(matchId);
+    if(!winner)
+      return null;
+    return {
+      playerId: winner.playerId.toString(),
+      playerName: winner.playerName,
+      totalVotos: winner.totalVotos
+    }
+  }
 }
