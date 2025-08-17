@@ -1,8 +1,9 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 //Creo la interfaz para TypeScript
 export interface IUser extends Document {
+  _id: Types.ObjectId;
   email: string;
   nombre: string;
   password: string;
