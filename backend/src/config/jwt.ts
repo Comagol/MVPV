@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 
 //configuro JWT
 export const JWT_CONFIG = {
@@ -14,17 +14,17 @@ export interface JWTPayload {
   nombre: string;
 };
 
-// funcion para generar el token
 export const generateToken = (payload: JWTPayload): string => {
-  return jwt.sign(payload, JWT_CONFIG.SECRET, {
-    expiresIn: JWT_CONFIG.EXPIRES_IN
-  });
+  const options: SignOptions = {
+    expiresIn: JWT_CONFIG.EXPIRES_IN as any
+  };
+  return jwt.sign(payload, JWT_CONFIG.SECRET as string, options);
 };
 
 // funcion para verificar el token
 export const verifyToken = (token: string): JWTPayload => {
   try {
-    return jwt.verify(token, JWT_CONFIG.SECRET) as JWTPayload;
+    return jwt.verify(token, JWT_CONFIG.SECRET as Secret) as JWTPayload;
   } catch (error) {
     throw new Error('Token invalido');
   }
