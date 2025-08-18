@@ -76,7 +76,7 @@ export class UserService {
   }
 
   //activar usuario (admin)
-  async activeUser(id: string): Promise<UserResponse | null> {
+  async activateUser(id: string): Promise<UserResponse | null> {
     const user = await this.userDao.activateUser(id);
     return user ? this.formatUserResponse(user) : null;
   }
