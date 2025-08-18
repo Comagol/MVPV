@@ -1,6 +1,7 @@
 import { IUser } from "../models/User";
 import { UserDao } from "../dao/UserDao";
 import { CreateUserRequest, LoginRequest, LoginResponse, UpdatePasswordRequest, UpdateUserRequest, UserResponse, UserValidation } from "../types/user.types";
+import { generateToken, JWTPayload } from "../config/jwt";
 
 export class UserService {
   private userDao: UserDao;
@@ -44,7 +45,11 @@ export class UserService {
       throw new Error('El usuario esta inactivo');
     }
     //genero un token
-    const token = this.generateToken(user._id.toString());
+    const token = generateToken({
+      userId: user._id.toString(),
+      email: user.email,
+      nombre: user.nombre
+    });
 
     return {
       token,
@@ -58,4 +63,27 @@ export class UserService {
     };
   }
 
+  //obtener todos los usuarios(admin)
+  async getAllUsers(): Promise<UserResponse[]> {
+    const users = await this.userDao.findAllUsers();
+    return users.map(user => this.formatUserResponse(user));
+  }
+
+  //obtener todos los usuarios activos (admin)
+  async getActiveUsers(): Promise<UserResponse[]> {
+    const users = await this.userDao.findActiveUsers();
+    return users.map(user => this.formatUserResponse(user));
+  }
+
+  //activar usuario (admin)
+  async activeUser(id: string): Promise<UserResponse | null> {
+    const user = await this.userDao.activateUser(id);
+    return user ? this.formatUserResponse(user) : null;
+  }
+
+  //desactivar usuario (admin)
+  async desactiveUser(id: string): Promise<UserResponse | null> {
+    const user = await this.userDao.deactivateUser(id);
+    return user ? this.formatUserResponse(user) : null;
+  }
 }
