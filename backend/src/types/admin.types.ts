@@ -39,7 +39,6 @@ export interface AdminResponse {
   email: string;
   nombre: string;
   ultimoAcceso?: Date;
-  fechaCreacion: Date;
 }
 
 //tipo para  verificar token de admin
