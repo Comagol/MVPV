@@ -78,4 +78,16 @@ export class AdminService {
     const admin = await this.adminDao.getAdminById(userId);
     return !!admin;
   }
+
+  async changePassword(userId: string, passwordData: UpdatePasswordRequest): Promise<boolean> {
+    const success = await this.adminDao.changePassword(
+      userId, 
+      passwordData.currentPassword, 
+      passwordData.newPassword
+    );
+    if (!success) {
+      throw new Error('Contraseña actual incorrecta');
+    }
+    return true;
+  }
 }
