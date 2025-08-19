@@ -61,4 +61,16 @@ export class AdminService {
       }
     };
   }
+
+  //metodo para obtener id por id
+  async getAdminById(adminId: string): Promise<AdminResponse | null> {
+    const admin = await this.adminDao.getAdminById(adminId);
+    return admin ? this.formatAdminResponse(admin) : null;
+  }
+
+  // metodo para obtener admin por email
+  async getAdminByEmail(email: string): Promise<AdminResponse | null> {
+    const admin = await this.adminDao.getAdminByEmail(email);
+    return admin ? this.formatAdminResponse(admin) : null;
+  }
 }
