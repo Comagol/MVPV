@@ -73,4 +73,9 @@ export class AdminService {
     const admin = await this.adminDao.getAdminByEmail(email);
     return admin ? this.formatAdminResponse(admin) : null;
   }
+
+  async isAdmin(userId: string): Promise<boolean> {
+    const admin = await this.adminDao.getAdminById(userId);
+    return !!admin;
+  }
 }
