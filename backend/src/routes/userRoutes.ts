@@ -17,3 +17,13 @@ router.post('register', async (req, res) => {
   }
 });
 
+//Ruta para iniciar sesion
+router.post('login', async (req, res) => {
+  try {
+    const credentials = req.body;
+    const loginResponse = await userService.login(credentials);
+    res.status(200).json(loginResponse);
+  } catch (error: any) {
+    res.status(401).json({ error: error.message });
+  }
+});
