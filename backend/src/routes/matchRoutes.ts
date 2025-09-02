@@ -29,3 +29,13 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+//ruta para obtener partidos activos
+router.get('/active', async (req, res) => {
+  try {
+    const activeMatches = await matchService.getActiveMatches();
+    res.json(activeMatches);
+  }catch (error: any) {
+    res.status(500).json({ error: error.message});
+  }
+});
