@@ -51,3 +51,19 @@ router.put('/:id/activate', authenticateToken,async(req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+//Ruta para obtener un usuario por id y desactivarlos
+router.put('/:id/deactivate', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userService.desactiveUser(id);
+    if(!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado'});
+    }
+    res.json(user);
+  }catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+export default router;
