@@ -7,7 +7,7 @@ const userService = new UserService();
 
 //RUTAS PUBLICAS
 //Ruta para registrar un nuevo usuario
-router.post('register', async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     const userData = req.body;
     const user = await userService.createUser(userData);
@@ -18,7 +18,7 @@ router.post('register', async (req, res) => {
 });
 
 //Ruta para iniciar sesion
-router.post('login', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const credentials = req.body;
     const loginResponse = await userService.login(credentials);
