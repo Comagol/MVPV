@@ -27,3 +27,13 @@ router.post('login', async (req, res) => {
     res.status(401).json({ error: error.message });
   }
 });
+
+//RUTAS DE ADMIN (con autenticacion)
+router.get('/', authenticateToken, async(req, res) => {
+  try {
+    const users = await userService.getAllUsers();
+    res.json(users);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
