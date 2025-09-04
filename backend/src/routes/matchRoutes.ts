@@ -82,3 +82,17 @@ router.put('/:id/start', authenticateToken, async (req, res) => {
     res.status(400).json({ error: error.message});
   }
 });
+
+//Ruta para finalizar un partido
+router.put('/:id/finish', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const match = await matchService.finishMatch(id);
+    if(!match) {
+      return res.status(404).json({ error: 'Partido no encontrado'});
+    }
+    res.json({ message: 'Partido finalizado correctamente', match});
+  }catch (error: any) {
+    res.status(400).json({ error: error.message});
+  }
+});
