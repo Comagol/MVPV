@@ -96,3 +96,5 @@ router.put('/:id/finish', authenticateToken, async (req, res) => {
     res.status(400).json({ error: error.message});
   }
 });
+
+export default router;
