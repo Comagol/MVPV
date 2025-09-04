@@ -1,6 +1,6 @@
 import express from "express";
 import { MatchService } from '../services/MatchService';
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken, isAdmin } from "../middleware/auth";
 
 const router = express.Router();
 const matchService = new MatchService();
@@ -42,7 +42,7 @@ router.get('/active/matches', async (req, res) => {
 
 //RUTAS PROTEGIDAS (solo admin)
 //Ruta para crear un nuevo partido
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, isAdmin, async (req, res) => {
   try {
     const matchData = req.body;
     const match = await matchService.createMatch(matchData);
@@ -53,7 +53,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 //Ruta para actualizar un partida
-router.put('/:id', authenticateToken, async (req, res) =>{
+router.put('/:id', authenticateToken, isAdmin, async (req, res) =>{
   try {
     const { id } = req.params;
     const updateData = req.body;
@@ -70,7 +70,7 @@ router.put('/:id', authenticateToken, async (req, res) =>{
 });
 
 //ruta para iniciar un partido
-router.put('/:id/start', authenticateToken, async (req, res) => {
+router.put('/:id/start', authenticateToken, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const match = await matchService.startMatch(id);
@@ -84,7 +84,7 @@ router.put('/:id/start', authenticateToken, async (req, res) => {
 });
 
 //Ruta para finalizar un partido
-router.put('/:id/finish', authenticateToken, async (req, res) => {
+router.put('/:id/finish', authenticateToken, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const match = await matchService.finishMatch(id);
