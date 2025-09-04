@@ -51,3 +51,20 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+//Ruta para actualizar un partida
+router.put('/:id', authenticateToken, async (req, res) =>{
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    const match = await matchService.updateMatch(id, updateData);
+    
+    if(!match) {
+      return res.status(404).json({ error: 'Partido no encontrado' });
+    }
+    res.json({message: 'Partido actualizado correctamente', match});
+    
+  }catch (error: any) {
+    res.status(400).json({ error: error.message});
+  }
+});
