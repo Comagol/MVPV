@@ -32,4 +32,27 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
       error: 'Forbidden'
     });
   }
-}
+};
+
+//Middleware para verificar si es admin
+export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(401).json({
+      message: 'Autenticacion requerida',
+      error: 'Unauthorized'
+    });
+  }
+
+  //importo admin service
+  const { AdminService } = await import('../services/AdminService');
+  const adminService = new AdminService();
+
+  const idAdmin = await adminService.isAdmin(req.user.userId);
+  if(!isAdmin) {
+    return res.status(403).json({
+      message: 'No tienes permisos para acceder a esta ruta',
+      error: 'Forbidden'
+    });
+  }
+  next();
+};
