@@ -47,7 +47,7 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
   const { AdminService } = await import('../services/AdminService');
   const adminService = new AdminService();
 
-  const idAdmin = await adminService.isAdmin(req.user.userId);
+  const isAdmin = await adminService.isAdmin(req.user.userId);
   if(!isAdmin) {
     return res.status(403).json({
       message: 'No tienes permisos para acceder a esta ruta',
