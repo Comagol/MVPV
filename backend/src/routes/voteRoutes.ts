@@ -1,6 +1,7 @@
 import express from 'express';
 import { VoteService } from '../services/VoteService';
 import { authenticateToken, isAdmin } from '../middleware/auth';
+import { match } from 'assert';
 
 const router = express.Router();
 const voteService = new VoteService();
@@ -31,3 +32,15 @@ router.get('/:matchId/winner', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+//Ruta para obtener el total de votos de un partido
+router.get('/:matchId/total-votes', async (req, res) => {
+  try {
+    const { matchId } = req.params;
+    const totalVotes = await voteService.getTotalVotes(matchId);
+    res.status(200).json({ totalVotes});
+  } catch (error:any) {
+    res.status(500).json({ error: error.message});
+  }
+});
+
