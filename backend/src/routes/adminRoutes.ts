@@ -33,3 +33,27 @@ router.post('/login', async (req, res) => {
     res.status(401).json({ error: error.message});
   }
 });
+
+//Rutas Privadas
+// Ruta para actualizar la contraseña del admin
+router.put('/change-password', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const adminId = req.user!.userId;
+    const passwordData = req.body;
+
+    const success = await adminService.changePassword(adminId, passwordData);
+
+    if(success) {
+      res.status(200).json({
+        message: 'Contraseña actualizada correctamente',
+        success
+      });
+    } else {
+        res.status(400).json({
+          error: 'Error al actualizar la contraseña'
+        });
+      }
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
