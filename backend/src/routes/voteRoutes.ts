@@ -44,3 +44,20 @@ router.get('/:matchId/total-votes', async (req, res) => {
   }
 });
 
+//Rutas para usuarios autenticados
+//Ruta para crear un voto
+router.post('/', authenticateToken, async (req, res) => {
+  try {
+    const voteData = req.body;
+    const userId = req.user!.userId;
+
+    const vote = await voteService.createVote(voteData, userId);
+    res.status(201).json({
+      message: 'Voto registrado correctamente',
+      vote,
+    });
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
