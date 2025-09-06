@@ -19,10 +19,19 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
 
-// Rutas
+// Ruta para test y desarollador frontend
 app.get('/', (req, res) => {
-  res.json({ message: 'API de votacion del jugador del partido.'});
+  res.json({ message: 'API de votacion del jugador del partido.',
+    version: '1.0.0',
+    endpoints: {
+      user: '/api/user',
+      match: '/api/match',
+      admin: '/api/admin',
+      vote: '/api/vote'
+    }
+  });
 });
 
 // Iniciar servidor
