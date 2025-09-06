@@ -34,6 +34,12 @@ app.get('/', (req, res) => {
   });
 });
 
+// Rutas de la API
+app.use('/api/user', userRoutes);
+app.use('/api/match', matchRoutes);
+app.use('/api/votes', voteRoutes);
+app.use('/api/admin', adminRoutes);
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🧙‍♂️ Servidor corriendo en el puerto ${PORT}`);
