@@ -40,6 +40,14 @@ app.use('/api/match', matchRoutes);
 app.use('/api/votes', voteRoutes);
 app.use('/api/admin', adminRoutes);
 
+// Middleware para manejar errores 
+app.use('*', (req, res) => {
+  res.status(404).json({
+    error: 'Ruta no encontrada',
+    message: `La ruta ${req.originalUrl} no existe en la API`
+  });
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🧙‍♂️ Servidor corriendo en el puerto ${PORT}`);
