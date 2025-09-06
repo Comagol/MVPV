@@ -1,6 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { connectDB } from './config/database';
+
+//importo las rutas
+import userRoutes from './routes/userRoutes';
+import matchRoutes from './routes/matchRoutes';
+import adminRoutes from './routes/adminRoutes';
+import voteRoutes from './routes/voteRoutes';
 
 // Cargar variables de entorno
 dotenv.config();
