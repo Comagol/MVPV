@@ -47,8 +47,8 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
   const { AdminService } = await import('../services/AdminService');
   const adminService = new AdminService();
 
-  const isAdmin = await adminService.isAdmin(req.user.userId);
-  if(!isAdmin) {
+  const isAdminUser = await adminService.isAdmin(req.user.userId);  // ✅ NUEVO NOMBRE
+  if(!isAdminUser) {  // ✅ USAR EL NUEVO NOMBRE
     return res.status(403).json({
       message: 'No tienes permisos para acceder a esta ruta',
       error: 'Forbidden'

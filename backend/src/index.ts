@@ -3,11 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 
-//importo las rutas
+//importo todas las rutas
 import userRoutes from './routes/userRoutes';
 import matchRoutes from './routes/matchRoutes';
-import adminRoutes from './routes/adminRoutes';
 import voteRoutes from './routes/voteRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -21,32 +21,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 
-// Ruta para test y desarollador frontend
+// Ruta simple para test
 app.get('/', (req, res) => {
-  res.json({ message: 'API de votacion del jugador del partido.',
-    version: '1.0.0',
-    endpoints: {
-      user: '/api/user',
-      match: '/api/match',
-      admin: '/api/admin',
-      vote: '/api/vote'
-    }
-  });
+  res.json({ message: 'API funcionando correctamente' });
 });
 
-// Rutas de la API
-app.use('/api/user', userRoutes);
-app.use('/api/match', matchRoutes);
+// Rutas de la API - todas las rutas
+app.use('/api/users', userRoutes);
+app.use('/api/matches', matchRoutes);
 app.use('/api/votes', voteRoutes);
 app.use('/api/admin', adminRoutes);
-
-// Middleware para manejar errores 
-app.use('*', (req, res) => {
-  res.status(404).json({
-    error: 'Ruta no encontrada',
-    message: `La ruta ${req.originalUrl} no existe en la API`
-  });
-});
 
 // Iniciar servidor
 const startServer = async () => {

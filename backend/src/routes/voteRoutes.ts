@@ -1,11 +1,21 @@
 import express from 'express';
 import { VoteService } from '../services/VoteService';
 import { authenticateToken, isAdmin } from '../middleware/auth';
-import { match } from 'assert';
 
 const router = express.Router();
 const voteService = new VoteService();
 
+//Ruta para validar si un usuario puede votar
+router.get('/validate/:matchId', authenticateToken, async (req, res) => {
+  try {
+    const { matchId } = req.params;
+    const userId = req.user!.userId;
+    const validation = await voteService.validateVote(userId, matchId);
+    res.status(200).json(validation);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
 //Ruta Publica
 //Ruta para obtener las estadisticas de votos de un partido
 router.get('/:matchId/stats', async (req, res) => {
@@ -61,16 +71,5 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
-//Ruta para validar si un usuario puede votar
-router.get('/validate/:matchId', authenticateToken, async (req, res) => {
-  try {
-    const { matchId } = req.params;
-    const userId = req.user!.userId;
-    const validation = await voteService.validateVote(userId, matchId);
-    res.status(200).json(validation);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 export default router;

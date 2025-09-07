@@ -34,9 +34,6 @@ const adminSchema = new Schema({
   timestamps: true
 });
 
-//Usamos Index mediante el email
-adminSchema.index({ email:1});
-
 //Metodo para verificar password
 adminSchema.methods.verificarPassword = async function (email: string): Promise<boolean> {
   return await bcrypt.compare(email, this.password);

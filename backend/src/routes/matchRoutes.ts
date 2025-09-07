@@ -16,6 +16,16 @@ router.get('/',async(req, res) => {
   }
 });
 
+//ruta para obtener partidos activos
+router.get('/active/matches', async (req, res) => {
+  try {
+    const activeMatches = await matchService.getActiveMatches();
+    res.json(activeMatches);
+  }catch (error: any) {
+    res.status(500).json({ error: error.message});
+  }
+});
+
 //Ruta para obtener un partido por id
 router.get('/:id', async (req, res) => {
   try {
@@ -30,15 +40,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-//ruta para obtener partidos activos
-router.get('/active/matches', async (req, res) => {
-  try {
-    const activeMatches = await matchService.getActiveMatches();
-    res.json(activeMatches);
-  }catch (error: any) {
-    res.status(500).json({ error: error.message});
-  }
-});
 
 //RUTAS PROTEGIDAS (solo admin)
 //Ruta para crear un nuevo partido

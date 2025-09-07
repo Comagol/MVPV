@@ -66,7 +66,6 @@ const userSchema = new Schema({
 });
 
 //Indices para mejorar la performance
-userSchema.index({ email: 1});
 userSchema.index({ token: 1});
 
 //Metodos del modelo
