@@ -49,6 +49,18 @@ app.use('*', (req, res) => {
 });
 
 // Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`🧙‍♂️ Servidor corriendo en el puerto ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    console.log('Base de datos conectada correctamente');
+
+    app.listen(PORT, () => {
+      console.log(`🧙‍♂️ Servidor corriendo en el puerto ${PORT}`);
+    });
+  } catch (error) {
+    console.log('❌ Error al iniciar el servidor', error);
+    process.exit(1);
+  }
+};
+
+startServer();
