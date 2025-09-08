@@ -16,6 +16,7 @@ export class MatchService {
       fecha: match.fecha,
       estado: match.estado,
       description: match.descripcion || '',
+      rival: match.rival,
       jugadores: match.jugadores.map((player) => ({
         id: player._id.toString(),
         nombre: player.nombre,

@@ -38,6 +38,11 @@ const matchSchema = new Schema<IMatch>({
     type: String,
     maxlength: 500,
     trim: true
+  },
+  rival: {
+    type: String,
+    required: true,
+    trim: true
   }
 }, {
   timestamps: true
