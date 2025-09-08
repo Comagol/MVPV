@@ -6,6 +6,7 @@ export interface CreateMatchRequest {
   fecha: Date;
   jugadores: string[];
   description: string;
+  rival: string;
 }
 
 //creo y exporto los tipos para actualizar un partido
@@ -14,6 +15,7 @@ export interface UpdateMatchRequest {
   jugadores?: string[];
   description?: string;
   estado?: 'programado' | 'en_proceso' | 'finalizado';
+  rival?: string;
 }
 
 //creo y exporto los tipos para respuesta de un partido
@@ -24,6 +26,7 @@ export interface MatchResponse {
   jugadores: PlayerResponse[];
   ganador?: PlayerResponse;
   description: string;
+  rival: string;
 }
 
 //Creo y exporto los tipos para las estadisticas de un partido
@@ -36,7 +39,8 @@ export interface MatchStatistics {
     nombre: string;
     apodo: string;
     votosRecibidos: number;
-  };
+  };  
+  rival: string;
 }
 
 // tipos para resultados de votacion
@@ -57,4 +61,5 @@ export interface MatchVotingResult {
     apodo: string;
     votosRecibidos: number;
   };
+  rival: string;
 }

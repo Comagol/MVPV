@@ -9,6 +9,7 @@ export interface IMatch extends Document {
   jugadores: IPlayer[];
   ganador?: IPlayer;
   descripcion?: string;
+  rival: string;
 }
 
 //Creo el Schema del partido
