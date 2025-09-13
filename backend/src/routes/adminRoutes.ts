@@ -11,10 +11,7 @@ router.post('/register', async (req, res) => {
   try {
     const adminData = req.body;
     const admin = await adminService.createAdmin(adminData);
-    res.status(201).json({
-      message: 'Admin creado correctamente',
-      admin
-    });
+    res.status(201).json(admin);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
@@ -25,10 +22,7 @@ router.post('/login', async (req, res) => {
   try {
     const credentials = req.body;
     const loginResponse = await adminService.loginAdmin(credentials);
-    res.status(200).json({
-      message: 'Inicio de sesion exitoso',
-      loginResponse
-    });
+    res.status(200).json(loginResponse);
   } catch (error: any) {
     res.status(401).json({ error: error.message});
   }
