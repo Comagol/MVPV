@@ -47,6 +47,12 @@ export class PlayerService {
   return player ? this.formatPlayerResponse(player) : null;
   }
 
+  //obtener todos los jugadores
+  async getPlayers(): Promise<PlayerResponse[]> {
+    const players = await this.playerDao.findAll();
+    return players.map(player => this.formatPlayerResponse(player));
+  }
+
   // Obtener todos los jugadores activos
   async getActivePlayers(): Promise<PlayerResponse[]> {
     const players = await this.playerDao.findActivePlayers();
