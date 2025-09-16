@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 //URL de conexión a MongoDB
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/votacion';
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/votacion';
 
 //Funcion para conectar a MongoDB 
 export const connectDB = async () => {
