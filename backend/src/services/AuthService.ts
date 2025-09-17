@@ -15,6 +15,7 @@ export class AuthService {
     try {
       const adminResult = await this.adminService.loginAdmin(credentials);
       return {
+        success: true,
         ...adminResult,
         userType: 'admin'
       }
@@ -22,6 +23,7 @@ export class AuthService {
       try {
         const userResult = await this.userService.login(credentials);
         return {
+          success: true,
           ...userResult,
           userType: 'user'
         }
