@@ -17,17 +17,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-//ruta para el login del admin
-router.post('/login', async (req, res) => {
-  try {
-    const credentials = req.body;
-    const loginResponse = await adminService.loginAdmin(credentials);
-    res.status(200).json(loginResponse);
-  } catch (error: any) {
-    res.status(401).json({ error: error.message});
-  }
-});
-
 //Rutas Privadas
 // Ruta para actualizar la contraseña del admin
 router.put('/change-password', authenticateToken, isAdmin, async (req, res) => {
