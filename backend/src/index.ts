@@ -9,6 +9,7 @@ import matchRoutes from './routes/matchRoutes';
 import voteRoutes from './routes/voteRoutes';
 import adminRoutes from './routes/adminRoutes';
 import playerRoutes from './routes/playerRoutes';
+import authRoutes from './routes/authRoutes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -33,6 +34,7 @@ app.use('/api/matches', matchRoutes);
 app.use('/api/votes', voteRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/players', playerRoutes);
+app.use('/api/auth', authRoutes);
 
 // Iniciar servidor
 const startServer = async () => {
