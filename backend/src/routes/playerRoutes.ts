@@ -42,4 +42,19 @@ router.get('/:id', authenticateToken, isAdmin, async (req,res) => {
   }
 });
 
+//Endpoint para actualizar un jugador
+router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    const player = await playerService.updatePlayer(id, updateData);
+    if(!player) {
+      return res.status(404).json({ error: 'Jugador no encontrado'});
+    }
+    res.json({message: 'Jugador actualizado correctamente', player});
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
