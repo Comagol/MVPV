@@ -11,7 +11,7 @@ export interface LoginResponse {
     id: string;
     email: string;
     nombre: string;
-    votosRealizados: number;
+    votosRealizados?: number;
     activo?:boolean;
   };
   admin?: {

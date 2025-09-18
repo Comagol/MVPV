@@ -16,7 +16,7 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
-})
+});
 
 //Ruta para obtener todos los jugadores
 router.get('/', authenticateToken, isAdmin, async (req, res) => {
