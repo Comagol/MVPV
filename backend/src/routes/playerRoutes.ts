@@ -28,4 +28,18 @@ router.get('/', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
+//Ruta para obtener un jugador por id
+router.get('/:id', authenticateToken, isAdmin, async (req,res) => {
+  try {
+    const { id } = req.params;
+    const player = await playerService.getPlayerById(id);
+    if(!player) {
+      return res.status(404).json({ error: 'Jugador no encontrado'});
+    }
+    res.json(player);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
