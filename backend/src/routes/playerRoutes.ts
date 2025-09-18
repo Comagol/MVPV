@@ -57,4 +57,18 @@ router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
+//Endpoint para eliminar un jugador
+router.delete('/:id', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await playerService.deletePlayer(id);
+    if(!result) {
+      return res.status(404).json({ error: 'Jugador no encontrado'});
+    }
+    res.json({message: 'Jugador eliminado correctamente'});
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
