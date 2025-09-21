@@ -38,12 +38,10 @@ export class PlayerDao {
     );
   }
 
-  //eliminar un jugador (soft delete)
+  //eliminar un jugador (hard delete)
   async deletePlayer(id: string): Promise<IPlayer | null> {
-    return await Player.findByIdAndUpdate(
-    id,
-    { activo: false }, 
-    { new: true, runValidators: true }
+    return await Player.findByIdAndDelete(
+      id
     );
   }
   
