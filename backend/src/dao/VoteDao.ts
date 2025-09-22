@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Vote, IVote } from "../models/Vote";
-import { VoteRequest, VoteStatistics } from "../types/vote.types";
+import { VoteRequest, VoteStatistics, UserVoteResponse, WinnerResponse } from "../types/vote.types";
 
 export class VoteDao {
 
@@ -107,7 +107,7 @@ export class VoteDao {
   }
 
   // obtener los votos en vivo
-  async getLiveVotingStats(matchId: string): Promise<any[]> {
+  async getLiveVotingStats(matchId: string): Promise<UserVoteResponse[]> {
     return await Vote.aggregate([
       { $match: { matchId: new mongoose.Types.ObjectId(matchId) }},
       { $group: {
@@ -134,7 +134,7 @@ export class VoteDao {
   }
 
   // obtener el ganador de un partido
-  async getMatchWinner(matchId: string): Promise<any> {
+  async getMatchWinner(matchId: string): Promise<WinnerResponse | null> {
     const result = await Vote.aggregate([
       { $match: { matchId: new mongoose.Types.ObjectId(matchId) }},
       { $group: {
@@ -157,6 +157,67 @@ export class VoteDao {
       }},
       { $sort: { totalVotos: -1 } },
       { $limit: 1 }
+    ]);
+    
+    return result[0] || null;
+  }
+
+    // Método para obtener top 3 jugadores más votados
+  async getTop3Players(matchId: string): Promise<any[]> {
+    if (!mongoose.Types.ObjectId.isValid(matchId)) {
+      throw new Error('ID de partido inválido');
+    }
+    
+    return await Vote.aggregate([
+      { $match: { matchId: new mongoose.Types.ObjectId(matchId) }},
+      { $group: {
+        _id: '$playerId',
+        totalVotos: { $sum: 1 }
+      }},
+      { $lookup: {
+        from: 'players',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'player'
+      }},
+      { $unwind: '$player' },
+      { $project: {
+        playerId: '$_id',
+        playerName: '$player.nombre',
+        playerApodo: '$player.apodo',
+        playerImagen: '$player.imagen',
+        totalVotos: 1
+      }},
+      { $sort: { totalVotos: -1 } },
+      { $limit: 3 }
+    ]);
+  }
+
+  // Método para obtener el voto de un usuario específico
+  async getUserVote(userId: string, matchId: string): Promise<UserVoteResponse | null> {
+    if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(matchId)) {
+      throw new Error('ID inválido');
+    }
+    
+    const result = await Vote.aggregate([
+      { $match: { 
+        userId: new mongoose.Types.ObjectId(userId), 
+        matchId: new mongoose.Types.ObjectId(matchId) 
+      }},
+      { $lookup: {
+        from: 'players',
+        localField: 'playerId',
+        foreignField: '_id',
+        as: 'player'
+      }},
+      { $unwind: '$player' },
+      { $project: {
+        playerId: '$playerId',
+        playerName: '$player.nombre',
+        playerApodo: '$player.apodo',
+        playerImagen: '$player.imagen',
+        fechaVoto: '$fechaVoto'
+      }}
     ]);
     
     return result[0] || null;

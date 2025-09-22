@@ -30,3 +30,22 @@ export interface VoteValidationResponse {
   razon?: string;
   tiempoRestante?: number;
 }
+
+// tipos para respuesta de ganador de partido
+export interface WinnerResponse {
+  playerId: string;
+  playerName: string;
+  playerApodo: string;
+  playerImagen: string;
+  totalVotos: number;
+}
+
+
+export interface UserVoteResponse {
+  playerId: string;
+  playerName: string;
+  playerApodo: string;
+  playerImagen: string;
+  fechaVoto: Date;
+}
+

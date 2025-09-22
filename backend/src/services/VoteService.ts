@@ -1,5 +1,5 @@
 import { VoteDao } from "../dao/VoteDao";
-import { VoteResponse, VoteRequest, VoteStatistics, VoteValidationResponse } from "../types/vote.types";
+import { VoteResponse, VoteRequest, VoteStatistics, VoteValidationResponse, WinnerResponse, UserVoteResponse } from "../types/vote.types";
 import { IVote } from "../models/Vote";
 import { MatchDao } from "../dao/MatchDao";
 import { PlayerDao } from "../dao/PlayerDao";
@@ -114,7 +114,7 @@ export class VoteService {
   }
 
   // metodo para obtener al ganador de un partido
-  async getMatchWinner(matchId: string): Promise<{ playerId: string, playerName: string, playerApodo: string, playerImagen: string, totalVotos: number } | null> {
+  async getMatchWinner(matchId: string): Promise<WinnerResponse | null> {
     const winner = await this.voteDao.getMatchWinner(matchId);
     if(!winner)
       return null;
