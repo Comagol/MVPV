@@ -131,4 +131,35 @@ export class VoteService {
   async getTotalVotes(matchId: string): Promise<number> {
     return await this.voteDao.getTotalVotes(matchId);
   }
+
+  // Obtener top 3 jugadores más votados
+  async getTop3Players(matchId: string): Promise<VoteStatistics[]> {
+    const top3 = await this.voteDao.getTop3Players(matchId);
+    const totalVotos = await this.voteDao.getTotalVotes(matchId);
+    
+    return top3.map(player => ({
+      playerId: player.playerId.toString(),
+      playerName: player.playerName,
+      playerApodo: player.playerApodo,
+      playerImagen: player.playerImagen,
+      totalVotos: player.totalVotos,
+      porcentaje: totalVotos > 0 ? (player.totalVotos / totalVotos) * 100 : 0
+    }));
+  }
+
+  // Obtener voto del usuario autenticado
+  async getUserVote(userId: string, matchId: string): Promise<UserVoteResponse | null> {
+    const userVote = await this.voteDao.getUserVote(userId, matchId);
+    if (!userVote) {
+      return null;
+    }
+    
+    return {
+      playerId: userVote.playerId.toString(),
+      playerName: userVote.playerName,
+      playerApodo: userVote.playerApodo,
+      playerImagen: userVote.playerImagen,
+      fechaVoto: userVote.fechaVoto
+    };
+  }
 }
