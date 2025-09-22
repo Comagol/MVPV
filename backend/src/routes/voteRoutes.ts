@@ -54,6 +54,18 @@ router.get('/:matchId/total-votes', async (req, res) => {
   }
 });
 
+//Ruta para obtener top 3 jugadores más votados
+router.get('/:matchId/top3', async (req, res) => {
+  try {
+    const { matchId } = req.params;
+    const top3 = await voteService.getTop3Players(matchId);
+    res.status(200).json(top3);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 //Rutas para usuarios autenticados
 //Ruta para crear un voto
 router.post('/', authenticateToken, async (req, res) => {
@@ -68,6 +80,23 @@ router.post('/', authenticateToken, async (req, res) => {
     });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+//Ruta para obtener el voto del usuario autenticado
+router.get('/:matchId/my-vote', authenticateToken, async (req, res) => {
+  try {
+    const { matchId } = req.params;
+    const userId = req.user!.userId;
+    const userVote = await voteService.getUserVote(userId, matchId);
+    
+    if (!userVote) {
+      return res.status(404).json({ error: 'No has votado en este partido' });
+    }
+    
+    res.status(200).json(userVote);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 });
 
