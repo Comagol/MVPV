@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Vote, IVote } from "../models/Vote";
 import { VoteRequest, VoteStatistics } from "../types/vote.types";
 
@@ -21,12 +22,12 @@ export class VoteDao {
 
   //Verificar si un usuario ya voto en un partido
   async hasVoted(userId: string, matchId: string): Promise<IVote | null> {
-    return await Vote.findOne({ userId, matchId});
+    return await Vote.findOne({ userId: new mongoose.Types.ObjectId(userId), matchId: new mongoose.Types.ObjectId(matchId)});
   }
 
   //Obtener votos por partido
   async findByMatch(matchId: string): Promise<IVote[]> {
-    return await Vote.find({ matchId })
+    return await Vote.find({ matchId: new mongoose.Types.ObjectId(matchId) })
     .populate('userId', 'nombre email')
     .populate('playerId', 'nombre apodo')
     .sort({ fechaVoto: -1 });
@@ -34,7 +35,7 @@ export class VoteDao {
 
   //Obtener votos por usuario
   async findByUser(userId: string): Promise<IVote[]> {
-    return await Vote.find({ userId })
+    return await Vote.find({ userId: new mongoose.Types.ObjectId(userId) })
     .populate('playerId', 'nombre apodo')
     .populate('matchId', 'fecha')
     .sort({ fechaVoto: -1 });
@@ -42,20 +43,22 @@ export class VoteDao {
 
   // Obtener votos por jugador de un partido especifico⚠️
   async findByPlayerInMatch(matchId: string, playerId: string): Promise<IVote[]> {
-    return await Vote.find({ matchId, playerId })
+    return await Vote.find({ matchId: new mongoose.Types.ObjectId(matchId), playerId: new mongoose.Types.ObjectId(playerId) })
     .populate('userId', 'nombre email')
     .sort({ fechaVoto: -1 })
   }
 
   //contar votos por jugador en un partido
   async countVotesByPlayerInMatch(matchId: string, playerId: string): Promise<number> {
-    return await Vote.countDocuments({ matchId, playerId });
+    return await Vote.countDocuments({ 
+      matchId: new mongoose.Types.ObjectId(matchId), 
+      playerId: new mongoose.Types.ObjectId(playerId) 
+    });
   }
-
   // obtener estadisticas de votacion de un partido
   async getMatchVotingStats(matchId: string): Promise<VoteStatistics[]> {
     return await Vote.aggregate([
-      { $match: { matchId }},
+      { $match: { matchId: new mongoose.Types.ObjectId(matchId) }},
       { $group: {
         _id: '$playerId',
         totalVotos: { $sum: 1 }
@@ -67,7 +70,7 @@ export class VoteDao {
   // obtener estadisticas detalladas con nombres de jugadores
   async getDetailedMatchStats(matchId: string): Promise<any[]> {
     return await Vote.aggregate([
-      { $match: { matchId }},
+      { $match: { matchId: new mongoose.Types.ObjectId(matchId) }},
       { $group: {
         _id: '$playerId',
         totalVotos: { $sum: 1 },
@@ -82,8 +85,8 @@ export class VoteDao {
       { $unwind: '$player' },
       { $project: {
         playerId: '$_id',
-        nombre: '$player.nombre',
-        apodo: '$player.apodo',
+        playerName: '$player.nombre',
+        playerApodo: '$player.apodo',
         totalVotos: 1,
         ultimoVoto: 1
       }},
@@ -93,19 +96,19 @@ export class VoteDao {
 
   //obtener el total de votos de un partido
   async getTotalVotes(matchId: string): Promise<number> {
-    return await Vote.countDocuments({ matchId });
+    return await Vote.countDocuments({ matchId: new mongoose.Types.ObjectId(matchId) });
   }
 
   //eliminar votos de un partido
   async deleteVotesByMatch(matchId: string): Promise<number> {
-    const result = await Vote.deleteMany({ matchId });
+    const result = await Vote.deleteMany({ matchId: new mongoose.Types.ObjectId(matchId) });
     return result.deletedCount || 0;
   }
 
   // obtener los votos en vivo
   async getLiveVotingStats(matchId: string): Promise<any[]> {
     return await Vote.aggregate([
-      { $match: { matchId }},
+      { $match: { matchId: new mongoose.Types.ObjectId(matchId) }},
       { $group: {
         _id: '$playerId',
         totalVotos: { $sum: 1 }
@@ -119,8 +122,8 @@ export class VoteDao {
       { $unwind: '$player' },
       { $project: {
         playerId: '$_id',
-        nombre: '$player.nombre',
-        apodo: '$player.apodo',
+        playerName: '$player.nombre',
+        playerApodo: '$player.apodo',
         totalVotos: 1,
         porcentaje: { $multiply: [{ $divide: ['$totalVotos', { $sum: '$totalVotos' }] }, 100] }
       }},
@@ -130,12 +133,29 @@ export class VoteDao {
 
   // obtener el ganador de un partido
   async getMatchWinner(matchId: string): Promise<any> {
-    return await Vote.aggregate([
-      { $match: { matchId }},
+    const result = await Vote.aggregate([
+      { $match: { matchId: new mongoose.Types.ObjectId(matchId) }},
       { $group: {
         _id: '$playerId',
         totalVotos: { $sum: 1 }
       }},
-    ])
+      { $lookup: {
+        from: 'players',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'player'
+      }},
+      { $unwind: '$player' },
+      { $project: {
+        playerId: '$_id',
+        playerName: '$player.nombre',
+        playerApodo: '$player.apodo',
+        totalVotos: 1
+      }},
+      { $sort: { totalVotos: -1 } },
+      { $limit: 1 }
+    ]);
+    
+    return result[0] || null;
   }
 }
