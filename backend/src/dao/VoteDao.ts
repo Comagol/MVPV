@@ -87,6 +87,7 @@ export class VoteDao {
         playerId: '$_id',
         playerName: '$player.nombre',
         playerApodo: '$player.apodo',
+        playerImagen: '$player.imagen',
         totalVotos: 1,
         ultimoVoto: 1
       }},
@@ -124,6 +125,7 @@ export class VoteDao {
         playerId: '$_id',
         playerName: '$player.nombre',
         playerApodo: '$player.apodo',
+        playerImagen: '$player.imagen',
         totalVotos: 1,
         porcentaje: { $multiply: [{ $divide: ['$totalVotos', { $sum: '$totalVotos' }] }, 100] }
       }},
@@ -150,6 +152,7 @@ export class VoteDao {
         playerId: '$_id',
         playerName: '$player.nombre',
         playerApodo: '$player.apodo',
+        playerImagen: '$player.imagen',
         totalVotos: 1
       }},
       { $sort: { totalVotos: -1 } },

@@ -106,19 +106,23 @@ export class VoteService {
     return stats.map(stat => ({
       playerId: stat.playerId.toString(),
       playerName: stat.playerName,
+      playerApodo: stat.playerApodo,
+      playerImagen: stat.playerImagen,
       totalVotos: stat.totalVotos,
       porcentaje: totalVotos > 0 ? (stat.totalVotos / totalVotos) * 100 : 0
     }));
   }
 
   // metodo para obtener al ganador de un partido
-  async getMatchWinner(matchId: string): Promise<{ playerId: string, playerName: string, totalVotos: number } | null> {
+  async getMatchWinner(matchId: string): Promise<{ playerId: string, playerName: string, playerApodo: string, playerImagen: string, totalVotos: number } | null> {
     const winner = await this.voteDao.getMatchWinner(matchId);
     if(!winner)
       return null;
     return {
       playerId: winner.playerId.toString(),
       playerName: winner.playerName,
+      playerApodo: winner.playerApodo,
+      playerImagen: winner.playerImagen,
       totalVotos: winner.totalVotos
     }
   }
