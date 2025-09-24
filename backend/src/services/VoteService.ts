@@ -3,16 +3,20 @@ import { VoteResponse, VoteRequest, VoteStatistics, VoteValidationResponse, Winn
 import { IVote } from "../models/Vote";
 import { MatchDao } from "../dao/MatchDao";
 import { PlayerDao } from "../dao/PlayerDao";
+import { UserDao } from "../dao/UserDao";
+import { EmailService } from "./EmailService";
 
 export class VoteService {
  private voteDao: VoteDao;
  private matchDao: MatchDao;
  private playerDao: PlayerDao;
+ private userDao: UserDao;
 
  constructor() {
   this.voteDao = new VoteDao();
   this.matchDao = new MatchDao();
   this.playerDao = new PlayerDao();
+  this.userDao = new UserDao();
  }
 
  // formatear la respuesta para el frontend
@@ -26,7 +30,7 @@ export class VoteService {
  }
 
  // metodo para crear un voto
- async createVote(voteData: VoteRequest, userId: string): Promise<VoteResponse> {
+async createVote(voteData: VoteRequest, userId: string): Promise<VoteResponse> {
   //valido que el partido exista
   const match = await this.matchDao.findById(voteData.matchId);
   if(!match) {
@@ -65,8 +69,35 @@ export class VoteService {
     token: voteData.token
   });
 
-  return this.formatVoteResponse(vote);
+  // 🆕 NUEVO: Enviar email de agradecimiento después del voto exitoso
+  try {
+    // Obtener información del usuario
+    const user = await this.userDao.getUserById(userId);
+    
+    if (user && user.email) {
+      // Construir información del partido
+      const matchInfo = `${match}`;
+      
+      // Enviar email de agradecimiento
+      const emailService = new EmailService();
+      await emailService.sendVoteThankYou({
+        email: user.email,
+        userName: user.nombre,
+        playerName: player.nombre,
+        playerImagen: player.apodo || '', // Usar apodo como imagen temporal
+        matchInfo: matchInfo
+      });
+
+      console.log(`✅ Email de agradecimiento enviado a: ${user.email}`);
+    }
+  } catch (emailError) {
+    // Si el email falla, solo logueamos el error pero NO fallamos el voto
+    console.error('❌ Error enviando email de agradecimiento:', emailError);
+    // El voto ya fue creado exitosamente, así que continúamos
   }
+
+  return this.formatVoteResponse(vote);
+}
 
   // metodo para verificar si el usuario puede votar
   async validateVote(userId: string, matchId: string): Promise<VoteValidationResponse> {
