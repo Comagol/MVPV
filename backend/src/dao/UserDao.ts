@@ -100,4 +100,11 @@ export class UserDao {
     return true;
   }
 
+  //buscar usuario por email
+  async findByEmail(email: string): Promise<IUser | null> {
+    return await User.findOne({ email });
+  }
+
+  
+
 }
