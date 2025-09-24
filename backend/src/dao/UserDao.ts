@@ -113,4 +113,11 @@ export class UserDao {
     });
   }
 
+  //limpio el token de recuperacion
+  async clearResetToken(userId: string): Promise<void> {
+    await User.findByIdAndUpdate(userId, {
+      $unset: { token: '', tokenExpires: '' }
+    });
+  }
+
 }
