@@ -2,6 +2,8 @@ import { IUser } from "../models/User";
 import { UserDao } from "../dao/UserDao";
 import { CreateUserRequest, LoginRequest, LoginResponse, UpdatePasswordRequest, UpdateUserRequest, UserResponse, UserValidation } from "../types/user.types";
 import { generateToken, JWTPayload } from "../config/jwt";
+import { EmailService } from "./EmailService";
+import crypto from 'crypto';
 
 export class UserService {
   private userDao: UserDao;
@@ -85,5 +87,32 @@ export class UserService {
   async desactiveUser(id: string): Promise<UserResponse | null> {
     const user = await this.userDao.deactivateUser(id);
     return user ? this.formatUserResponse(user) : null;
+  }
+
+  // metodo para solicitar recuperacion de contraseña
+  async requestPasswordReset(email: string): Promise<void> {
+    // busco si el usuario existe
+    const user = await this.userDao.findByEmail(email);
+    if(!user) {
+      throw new Error('Recibira un email para recuperar la contraseña');
+    }
+    if(!user.activo) {
+      throw new Error('El usuario esta inactivo');
+    }
+    // genero token unico y aleatorio
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    //calculo fecha de expiracion
+    const tokenExpires = new Date(Date.now() + 3600000);
+    // guardo el token en la base de datos
+    await this.userDao.saveResetToken(user._id.toString(), resetToken, tokenExpires);
+
+    // envio el email de recuperacion
+    const emailService = new EmailService();
+    await emailService.sendPasswordReset({
+      email: user.email,
+      resetToken: resetToken,
+      userName: user.nombre
+    });
+    console.log('Email de recuperacion enviado a:', user.email);
   }
 }
