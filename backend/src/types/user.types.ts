@@ -51,3 +51,20 @@ export interface UserValidation {
   razon?: string;
   tiempoRestante?: number;
 }
+
+// tipo para solicitud de recuperacion de contraseña
+export interface PasswordResetRequest {
+  email: string;
+}
+
+// tipo para solicitud de cambio de contraseña
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
+// tipo para respuesta de verificacion de token
+export interface TokenVerificationResponse {
+  valid: boolean;
+  message?: string;
+}
