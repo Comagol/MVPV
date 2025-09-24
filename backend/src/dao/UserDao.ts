@@ -105,6 +105,12 @@ export class UserDao {
     return await User.findOne({ email });
   }
 
-  
+  // guardar token de recuperacion de contraseña
+  async saveResetToken(userId: string, token: string, expires: Date): Promise<void> {
+    await User.findByIdAndUpdate(userId, {
+      token,
+      tokenExpires: expires
+    });
+  }
 
 }
