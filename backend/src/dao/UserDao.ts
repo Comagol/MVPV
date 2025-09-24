@@ -120,4 +120,9 @@ export class UserDao {
     });
   }
 
+  //buscar usuario por token de recuperacion
+  async findByResetToken(token: string): Promise<IUser | null> {
+    return await User.findOne({ token, tokenExpires: { $gt: Date.now() } });
+  }
+
 }
