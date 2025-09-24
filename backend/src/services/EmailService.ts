@@ -100,6 +100,8 @@ private createVoteThankYouTemplate(data: VoteThankYouData): EmailTemplate {
           .header { background-color: #27ae60; color: white; padding: 20px; text-align: center; }
           .content { padding: 20px; background-color: #f8f9fa; }
           .vote-info { background-color: white; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #27ae60; }
+          .player-section { text-align: center; margin: 20px 0; }
+          .player-image { max-width: 150px; height: 150px; border-radius: 10px; margin: 10px auto; display: block; object-fit: cover; border: 3px solid #27ae60; }
           .footer { padding: 20px; text-align: center; color: #7f8c8d; font-size: 12px; }
         </style>
       </head>
@@ -113,11 +115,20 @@ private createVoteThankYouTemplate(data: VoteThankYouData): EmailTemplate {
             <p>Tu voto ha sido registrado exitosamente.</p>
             <div class="vote-info">
               <h3>📊 Detalles de tu voto:</h3>
-              <p><strong>Jugador votado:</strong> ${data.playerName}${data.playerImagen ? ` - ${data.playerImagen}` : ''}</p>
-              ${data.playerImagen ? `<img src="${data.playerImagen}" alt="${data.playerName}" style="max-width: 100px; border-radius: 5px; margin: 10px 0;">` : ''}
-              <p><strong>Partido:</strong> ${data.matchInfo}</p>
-              <p><strong>Fecha:</strong> ${new Date().toLocaleString('es-ES')}</p>
+              
+              <div class="player-section">
+                <h4>🏃‍♂️ Jugador Votado:</h4>
+                ${data.playerImagen ? 
+                  `<img src="${data.playerImagen}" alt="Foto de ${data.playerName}" class="player-image" onerror="this.style.display='none';">` 
+                  : ''
+                }
+                <p><strong>${data.playerName}</strong></p>
+              </div>
+              
+              <p><strong>🏉 Partido:</strong> ${data.matchInfo}</p>
+              <p><strong>📅 Fecha:</strong> ${new Date().toLocaleString('es-ES')}</p>
             </div>
+            
             <p>Tu participación es muy importante para nosotros. ¡Gracias por ser parte de nuestra comunidad!</p>
             <p>Recuerda que podrás votar nuevamente en 24 horas.</p>
           </div>
@@ -136,7 +147,7 @@ private createVoteThankYouTemplate(data: VoteThankYouData): EmailTemplate {
       Tu voto ha sido registrado exitosamente.
       
       Detalles:
-      - Jugador: ${data.playerName}${data.playerImagen ? ` (${data.playerImagen})` : ''}
+      - Jugador: ${data.playerName}
       - Partido: ${data.matchInfo}
       - Fecha: ${new Date().toLocaleString('es-ES')}
       
