@@ -113,7 +113,8 @@ private createVoteThankYouTemplate(data: VoteThankYouData): EmailTemplate {
             <p>Tu voto ha sido registrado exitosamente.</p>
             <div class="vote-info">
               <h3>📊 Detalles de tu voto:</h3>
-              <p><strong>Jugador votado:</strong> ${data.playerName}${data.playerImagen ? ` (${data.playerImagen})` : ''}</p>
+              <p><strong>Jugador votado:</strong> ${data.playerName}${data.playerImagen ? ` - ${data.playerImagen}` : ''}</p>
+              ${data.playerImagen ? `<img src="${data.playerImagen}" alt="${data.playerName}" style="max-width: 100px; border-radius: 5px; margin: 10px 0;">` : ''}
               <p><strong>Partido:</strong> ${data.matchInfo}</p>
               <p><strong>Fecha:</strong> ${new Date().toLocaleString('es-ES')}</p>
             </div>

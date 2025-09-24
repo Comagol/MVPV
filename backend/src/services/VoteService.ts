@@ -76,7 +76,7 @@ async createVote(voteData: VoteRequest, userId: string): Promise<VoteResponse> {
     
     if (user && user.email) {
       // Construir información del partido
-      const matchInfo = `${match}`;
+      const matchInfo = `Vicentinos vs ${match.rival}`;
       
       // Enviar email de agradecimiento
       const emailService = new EmailService();
@@ -84,7 +84,7 @@ async createVote(voteData: VoteRequest, userId: string): Promise<VoteResponse> {
         email: user.email,
         userName: user.nombre,
         playerName: player.nombre,
-        playerImagen: player.apodo || '', // Usar apodo como imagen temporal
+        playerImagen: player.imagen || '', // Usar apodo como imagen temporal
         matchInfo: matchInfo
       });
 
