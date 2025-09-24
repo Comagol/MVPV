@@ -1,6 +1,6 @@
 import { IUser } from "../models/User";
 import { UserDao } from "../dao/UserDao";
-import { CreateUserRequest, LoginRequest, LoginResponse, UpdatePasswordRequest, UpdateUserRequest, UserResponse, UserValidation } from "../types/user.types";
+import { CreateUserRequest, LoginRequest, LoginResponse, ResetPasswordRequest, TokenVerificationResponse, UpdatePasswordRequest, UpdateUserRequest, UserResponse, UserValidation } from "../types/user.types";
 import { generateToken, JWTPayload } from "../config/jwt";
 import { EmailService } from "./EmailService";
 import crypto from 'crypto';
@@ -115,4 +115,43 @@ export class UserService {
     });
     console.log('Email de recuperacion enviado a:', user.email);
   }
+
+  // metodo para resetear la contraseña usando el token
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    // busco al user por el token valido
+    const user = await this.userDao.findByResetToken(token);
+    if (!user) {
+      throw new Error('Token de recuperacion invalido o expirado');
+    }
+    if (newPassword.length < 8) {
+      throw new Error('La contraseña debe tener al menos 8 caracteres');
+    }
+  
+    // cambio la contraseña y vacio los campos de token y tokenExpires
+    user.password = newPassword;
+    user.token = '';
+    user.tokenExpires = undefined;
+
+    // guardo los cambios
+    await user.save();
+    console.log('Contraseña restablecida exitosamente');
+  }
+
+  // Método para verificar si un token es válido (opcional, para el frontend)
+  async verifyResetToken(token: string): Promise<TokenVerificationResponse> {
+    const user = await this.userDao.findByResetToken(token);
+    
+    if (!user) {
+      return {
+        valid: false,
+        message: 'Token inválido o expirado'
+      };
+    }
+
+    return {
+      valid: true,
+      message: 'Token válido'
+    };
+    }
+
 }
