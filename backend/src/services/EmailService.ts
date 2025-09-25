@@ -63,26 +63,12 @@ private createPasswordResetTemplate(data: PasswordResetData): EmailTemplate {
             <p>Has solicitado recuperar tu contraseña en el Sistema de Votación.</p>
             
             <!-- Opción 1: Botón directo -->
-            <h3 class="section-title">🚀 Opción 1: Acceso Rápido</h3>
+            <h3 class="section-title">🚀 Recuperar Contraseña</h3>
             <p>Haz clic en el siguiente botón para ir directamente al formulario de nueva contraseña:</p>
             <p style="text-align: center;">
               <a href="${resetUrl}" class="button">Recuperar Contraseña</a>
             </p>
-            
-            <!-- Opción 2: Código manual -->
-            <h3 class="section-title">📝 Opción 2: Código Manual</h3>
-            <p>Si el botón no funciona, puedes usar este código de recuperación:</p>
-            
-            <div class="token-section">
-              <p><strong>1.</strong> Ve a la página de recuperación:</p>
-              <p><a href="${process.env.FRONTEND_URL}/reset-password" class="url-link">${process.env.FRONTEND_URL}/reset-password</a></p>
-              
-              <p><strong>2.</strong> Copia y pega este código:</p>
-              <div class="token-box">
-                ${data.resetToken}
-              </div>
-              
-              <p><strong>3.</strong> Ingresa tu nueva contraseña y confirma el cambio.</p>
+          
             </div>
             
             <!-- Advertencia de seguridad -->
@@ -112,19 +98,16 @@ private createPasswordResetTemplate(data: PasswordResetData): EmailTemplate {
       
       Has solicitado recuperar tu contraseña en el Sistema de Votación.
       
-      🚀 OPCIÓN 1: ACCESO RÁPIDO
+      🚀 Recuperar Contraseña
       Visita este enlace directo:
       ${resetUrl}
       
-      📝 OPCIÓN 2: CÓDIGO MANUAL
       Si el enlace no funciona:
       
-      1. Ve a: ${process.env.FRONTEND_URL}/reset-password
+      1. Ve a: ${resetUrl}
       
       2. Usa este código de recuperación:
       ${data.resetToken}
-      
-      3. Ingresa tu nueva contraseña
       
       ⏰ IMPORTANTE: Este código expira en 1 hora.
       
