@@ -87,8 +87,6 @@ async createVote(voteData: VoteRequest, userId: string): Promise<VoteResponse> {
         playerImagen: player.imagen || '', // Usar apodo como imagen temporal
         matchInfo: matchInfo
       });
-
-      console.log(`✅ Email de agradecimiento enviado a: ${user.email}`);
     }
   } catch (emailError) {
     // Si el email falla, solo logueamos el error pero NO fallamos el voto

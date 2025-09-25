@@ -23,15 +23,13 @@ export class EmailService {
       };
 
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('Email enviado con exito:', result.messageId);
     } catch (error) {
-      console.error('Error al enviar el email:', error);
       throw error;
     }
   }
 
  // Template para recuperación de contraseña
- private createPasswordResetTemplate(data: PasswordResetData): EmailTemplate {
+private createPasswordResetTemplate(data: PasswordResetData): EmailTemplate {
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${data.resetToken}`;
   
   return {
@@ -45,8 +43,14 @@ export class EmailService {
           .email-container { max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; }
           .header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
           .content { padding: 20px; background-color: #f8f9fa; }
-          .button { display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .button { display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+          .button:hover { background-color: #2980b9; }
+          .token-section { background-color: #fff; border: 2px dashed #3498db; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .token-box { background-color: #ecf0f1; padding: 15px; border-radius: 5px; margin: 10px 0; font-family: 'Courier New', monospace; font-size: 14px; word-break: break-all; border-left: 4px solid #3498db; }
+          .section-title { color: #2c3e50; margin-bottom: 10px; }
+          .warning { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #ffc107; }
           .footer { padding: 20px; text-align: center; color: #7f8c8d; font-size: 12px; }
+          .url-link { color: #3498db; text-decoration: underline; }
         </style>
       </head>
       <body>
@@ -57,31 +61,78 @@ export class EmailService {
           <div class="content">
             <h2>Hola ${data.userName},</h2>
             <p>Has solicitado recuperar tu contraseña en el Sistema de Votación.</p>
-            <p>Haz clic en el siguiente botón para crear una nueva contraseña:</p>
+            
+            <!-- Opción 1: Botón directo -->
+            <h3 class="section-title">🚀 Opción 1: Acceso Rápido</h3>
+            <p>Haz clic en el siguiente botón para ir directamente al formulario de nueva contraseña:</p>
             <p style="text-align: center;">
               <a href="${resetUrl}" class="button">Recuperar Contraseña</a>
             </p>
-            <p><strong>⏰ Este enlace expira en 1 hora.</strong></p>
-            <p>Si no solicitaste este cambio, puedes ignorar este email.</p>
+            
+            <!-- Opción 2: Código manual -->
+            <h3 class="section-title">📝 Opción 2: Código Manual</h3>
+            <p>Si el botón no funciona, puedes usar este código de recuperación:</p>
+            
+            <div class="token-section">
+              <p><strong>1.</strong> Ve a la página de recuperación:</p>
+              <p><a href="${process.env.FRONTEND_URL}/reset-password" class="url-link">${process.env.FRONTEND_URL}/reset-password</a></p>
+              
+              <p><strong>2.</strong> Copia y pega este código:</p>
+              <div class="token-box">
+                ${data.resetToken}
+              </div>
+              
+              <p><strong>3.</strong> Ingresa tu nueva contraseña y confirma el cambio.</p>
+            </div>
+            
+            <!-- Advertencia de seguridad -->
+            <div class="warning">
+              <strong>⏰ Importante:</strong> Este código expira en <strong>1 hora</strong> por seguridad.
+            </div>
+            
+            <p>Si no solicitaste este cambio, puedes ignorar este email de forma segura.</p>
+            
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+            <p style="font-size: 14px; color: #7f8c8d;">
+              <strong>💡 Consejo:</strong> Guarda tu nueva contraseña en un lugar seguro para evitar futuros inconvenientes.
+            </p>
           </div>
           <div class="footer">
             <p>Sistema de Votación © ${new Date().getFullYear()}</p>
+            <p>Este es un email automático, no responder.</p>
           </div>
         </div>
       </body>
       </html>
     `,
     text: `
-      Recuperación de Contraseña
+      🔐 Recuperación de Contraseña - Sistema de Votación
       
       Hola ${data.userName},
       
-      Has solicitado recuperar tu contraseña.
-      Visita este enlace para crear una nueva contraseña: ${resetUrl}
+      Has solicitado recuperar tu contraseña en el Sistema de Votación.
       
-      Este enlace expira en 1 hora.
+      🚀 OPCIÓN 1: ACCESO RÁPIDO
+      Visita este enlace directo:
+      ${resetUrl}
+      
+      📝 OPCIÓN 2: CÓDIGO MANUAL
+      Si el enlace no funciona:
+      
+      1. Ve a: ${process.env.FRONTEND_URL}/reset-password
+      
+      2. Usa este código de recuperación:
+      ${data.resetToken}
+      
+      3. Ingresa tu nueva contraseña
+      
+      ⏰ IMPORTANTE: Este código expira en 1 hora.
       
       Si no solicitaste este cambio, puedes ignorar este email.
+      
+      ---
+      Sistema de Votación © ${new Date().getFullYear()}
+      Este es un email automático, no responder.
     `
   };
 }
