@@ -21,9 +21,30 @@ export class EmailService {
         html: options.html,
         text: options.text,
       };
-
-      const result = await this.transporter.sendMail(mailOptions);
+  
+      // Configurar reintentos
+      let attempts = 0;
+      const maxAttempts = 3;
+      
+      while (attempts < maxAttempts) {
+        try {
+          await this.transporter.sendMail(mailOptions);
+          console.log('✅ Email enviado exitosamente');
+          return;
+        } catch (error: any) {
+          attempts++;
+          console.log(`❌ Intento ${attempts} fallido:`, error.message);
+          
+          if (attempts >= maxAttempts) {
+            throw error;
+          }
+          
+          // Esperar antes del siguiente intento
+          await new Promise(resolve => setTimeout(resolve, 2000 * attempts));
+        }
+      }
     } catch (error) {
+      console.error('❌ Error final enviando email:', error);
       throw error;
     }
   }
