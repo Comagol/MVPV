@@ -11,24 +11,23 @@ export const createEmailTransporter = () => {
     service: 'gmail',
     host: 'smtp.gmail.com',
     port: 587,
-    secure: false, // true para 465, false para otros puertos
+    secure: false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_APP_PASSWORD,
     },
     tls: {
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      ciphers: 'SSLv3'
     },
-    connectionTimeout: 60000, // 60 segundos
-    greetingTimeout: 30000,  // 30 segundos
-    socketTimeout: 60000,    // 60 segundos
-    pool: true,              // Usar pool de conexiones
-    maxConnections: 5,       // Máximo 5 conexiones
-    maxMessages: 100,        // Máximo 100 mensajes por conexión
-    rateDelta: 20000,       // 20 segundos entre reintentos
-    rateLimit: 5            // Máximo 5 reintentos
+    connectionTimeout: 20000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000,
+    pool: false,
+    maxConnections: 1,
+    maxMessages: 1
   });
-};  
+};
 //Configuracion para testing de conexion
 export const testEmailConnection = async (): Promise<Boolean> => {
   try {
