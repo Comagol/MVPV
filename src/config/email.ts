@@ -8,7 +8,7 @@ export const createEmailTransporter = () => {
   if (process.env.EMAIL_SERVICE === 'brevo') {
     // Usar API de Brevo en lugar de SMTP
     const apiInstance = new brevo.TransactionalEmailsApi();
-    apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_SMTP_KEY);
+    apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_SMTP_KEY || '');
     return apiInstance;
   }
   
@@ -16,7 +16,7 @@ export const createEmailTransporter = () => {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
     throw new Error('Configuracion de email incompleta. Verificar las variables de entorno.');
   }
-  
+
   return nodemailer.createTransport({
     service: 'gmail',
     auth: {
