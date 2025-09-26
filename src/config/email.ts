@@ -21,9 +21,14 @@ export const createEmailTransporter = () => {
     },
     connectionTimeout: 60000, // 60 segundos
     greetingTimeout: 30000,  // 30 segundos
-    socketTimeout: 60000     // 60 segundos
+    socketTimeout: 60000,    // 60 segundos
+    pool: true,              // Usar pool de conexiones
+    maxConnections: 5,       // Máximo 5 conexiones
+    maxMessages: 100,        // Máximo 100 mensajes por conexión
+    rateDelta: 20000,       // 20 segundos entre reintentos
+    rateLimit: 5            // Máximo 5 reintentos
   });
-};
+};  
 //Configuracion para testing de conexion
 export const testEmailConnection = async (): Promise<Boolean> => {
   try {
