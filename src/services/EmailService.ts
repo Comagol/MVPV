@@ -42,7 +42,7 @@ export class EmailService {
 
  // Template para recuperación de contraseña
 private createPasswordResetTemplate(data: PasswordResetData): EmailTemplate {
-  const resetUrl = `${process.env.FRONTEND_URL}/?token=${data.resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${data.resetToken}`;
   
   return {
     subject: 'Recuperación de Contraseña - Sistema de Votación',
