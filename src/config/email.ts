@@ -9,25 +9,12 @@ export const createEmailTransporter = () => {
   }
   return nodemailer.createTransport({
     service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_APP_PASSWORD,
-    },
-    tls: {
-      rejectUnauthorized: false,
-      ciphers: 'SSLv3'
-    },
-    connectionTimeout: 20000,
-    greetingTimeout: 10000,
-    socketTimeout: 20000,
-    pool: false,
-    maxConnections: 1,
-    maxMessages: 1
+    }
   });
-};
+};  
 //Configuracion para testing de conexion
 export const testEmailConnection = async (): Promise<Boolean> => {
   try {
