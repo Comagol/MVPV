@@ -1,22 +1,15 @@
 import nodemailer from 'nodemailer';
+import * as brevo from '@getbrevo/brevo';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 export const createEmailTransporter = () => {
   if (process.env.EMAIL_SERVICE === 'brevo') {
-    return nodemailer.createTransport({
-      host: 'smtp-relay.brevo.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_FROM,
-        pass: process.env.BREVO_SMTP_KEY,
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
+    // Usar API de Brevo en lugar de SMTP
+    const apiInstance = new brevo.TransactionalEmailsApi();
+    apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_SMTP_KEY || '');
+    return apiInstance;
   }
   
   // Fallback a Gmail si no está configurado Brevo

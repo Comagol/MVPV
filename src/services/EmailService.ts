@@ -4,6 +4,7 @@ import { EmailOptions,
   VoteThankYouData, 
   EmailTemplate 
 } from "../types/email.types";
+import * as brevo from '@getbrevo/brevo';
 
 export class EmailService {
   private transporter;
@@ -14,15 +15,26 @@ export class EmailService {
 
   private async sendEmail(options: EmailOptions): Promise<void> {
     try {
-      const mailOptions = {
-        from: `Sistema de votacion <${process.env.EMAIL_FROM}>`,
-        to: options.to,
-        subject: options.subject,
-        html: options.html,
-        text: options.text,
-      };
-  
-      await this.transporter.sendMail(mailOptions);
+      if (process.env.EMAIL_SERVICE === 'brevo') {
+        // Usar API de Brevo
+        const sendSmtpEmail = new brevo.SendSmtpEmail();
+        sendSmtpEmail.subject = options.subject;
+        sendSmtpEmail.htmlContent = options.html;
+        sendSmtpEmail.textContent = options.text;
+        sendSmtpEmail.sender = { name: "Sistema de Votación", email: process.env.EMAIL_FROM };
+        sendSmtpEmail.to = [{ email: options.to }];
+        
+        await (this.transporter as any).sendTransacEmail(sendSmtpEmail);
+      } else {
+        const mailOptions = {
+          from: `Sistema de votacion <${process.env.EMAIL_USER}>`,
+          to: options.to,
+          subject: options.subject,
+          html: options.html,
+          text: options.text,
+        };
+        await (this.transporter as any).sendMail(mailOptions);
+      }
     } catch (error) {
       throw error;
     }
