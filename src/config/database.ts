@@ -7,12 +7,6 @@ dotenv.config();
 //URL de conexión a MongoDB
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/votacion';
 
-// Debug: Verificar variables de entorno
-console.log('🔍 Variables de entorno:');
-console.log('MONGODB_URI:', process.env.MONGODB_URI);
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('PORT:', process.env.PORT);
-console.log('MONGO_URI final:', MONGO_URI);
 
 //Funcion para conectar a MongoDB 
 export const connectDB = async () => {
