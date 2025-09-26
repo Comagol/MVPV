@@ -15,36 +15,15 @@ export class EmailService {
   private async sendEmail(options: EmailOptions): Promise<void> {
     try {
       const mailOptions = {
-        from: `Sistema de votacion <${process.env.EMAIL_USER}>`,
+        from: `Sistema de votacion <${process.env.EMAIL_FROM}>`,
         to: options.to,
         subject: options.subject,
         html: options.html,
         text: options.text,
       };
   
-      // Configurar reintentos
-      let attempts = 0;
-      const maxAttempts = 3;
-      
-      while (attempts < maxAttempts) {
-        try {
-          await this.transporter.sendMail(mailOptions);
-          console.log('✅ Email enviado exitosamente');
-          return;
-        } catch (error: any) {
-          attempts++;
-          console.log(`❌ Intento ${attempts} fallido:`, error.message);
-          
-          if (attempts >= maxAttempts) {
-            throw error;
-          }
-          
-          // Esperar antes del siguiente intento
-          await new Promise(resolve => setTimeout(resolve, 2000 * attempts));
-        }
-      }
+      await this.transporter.sendMail(mailOptions);
     } catch (error) {
-      console.error('❌ Error final enviando email:', error);
       throw error;
     }
   }
