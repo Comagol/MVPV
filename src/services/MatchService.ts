@@ -167,4 +167,14 @@ export class MatchService {
     // retorno la respuesta formateada
     return this.formatMatchResponse(match);
   };
+
+  // obtener el ultimo partido
+  async getLastMatch(): Promise<MatchResponse | null> {
+    const match = await this.matchDao.getLastMatch();
+    if(!match) {
+      return null;
+    }
+    // retorno la respuesta formateada
+    return this.formatMatchResponse(match);
+  }
 }

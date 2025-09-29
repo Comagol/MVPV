@@ -98,4 +98,17 @@ router.put('/:id/finish', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
+//Ruta para obtener el ultimo partido finalizado
+router.get('/last-match', async (req, res) => {
+  try {
+    const lastMatch = await matchService.getLastMatch();
+    if(!lastMatch) {
+      return res.status(404).json({error: 'No hay partidos finalizados'});
+    }
+    res.json(lastMatch);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message});
+  }
+});
+
 export default router;
