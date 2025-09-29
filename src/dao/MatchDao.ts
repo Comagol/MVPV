@@ -91,4 +91,13 @@ export class MatchDao {
       }
     ]);
   }
+
+  //Obtengo el ultimo partido
+  async getLastMatch(): Promise<IMatch | null> {
+    return await Match.findOne({
+      estado: 'finalizado'
+    })
+    .populate('jugadores ganador')
+    .sort({ fecha: -1 });
+  }
 }
