@@ -69,7 +69,7 @@ export class MatchDao {
     return await Match.find({
       estado: 'programado'
     })
-    .populate('jugadores ganador')
+    .populate('jugadores')
     .sort({ fecha: 1 });
   }
 
