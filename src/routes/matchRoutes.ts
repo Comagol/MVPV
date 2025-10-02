@@ -39,6 +39,16 @@ router.get('/last-match', async (req, res) => {
   }
 });
 
+//Ruta para obtener partidos programados
+router.get('/scheduled', async (req, res) => {
+  try {
+    const scheduledMatches = await matchService.getScheduledMatches();
+    res.json(scheduledMatches);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Ruta para obtener un partido por id
 router.get('/:id', async (req, res) => {
   try {
@@ -49,16 +59,6 @@ router.get('/:id', async (req, res) => {
     }
     res.json(match);
   }catch (error:any) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-//Ruta para obtener partidos programados
-router.get('/scheduled', async (req, res) => {
-  try {
-    const scheduledMatches = await matchService.getScheduledMatches();
-    res.json(scheduledMatches);
-  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });
