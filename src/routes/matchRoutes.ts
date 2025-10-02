@@ -53,6 +53,16 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+//Ruta para obtener partidos programados
+router.get('/scheduled', async (req, res) => {
+  try {
+    const scheduledMatches = await matchService.getScheduledMatches();
+    res.json(scheduledMatches);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 //RUTAS PROTEGIDAS (solo admin)
 //Ruta para crear un nuevo partido
