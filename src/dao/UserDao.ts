@@ -79,7 +79,7 @@ export class UserDao {
   // verificar credenciales para el login
   async verifyCredentials(email: string, password: string): Promise<IUser | null> {
   const user = await User.findOne({ email: email.toLowerCase() });
-  if (!user) return null;
+  if (!user || !user.password) return null;
 
   const isValidPassword = await bcrypt.compare(password, user.password);
   return isValidPassword ? user : null;
@@ -88,7 +88,7 @@ export class UserDao {
   // Cambiar contraseña de un usuario
   async changePassword(id: string, currentPassword: string, newPassword: string): Promise<boolean> {
     const user = await User.findById(id);
-    if (!user) return false;
+    if (!user || !user.password) return false;
 
     const isValidPassword = await bcrypt.compare(currentPassword, user.password);
     if (!isValidPassword) return false;

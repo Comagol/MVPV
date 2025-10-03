@@ -85,7 +85,6 @@ const userSchema = new Schema({
 });
 
 //Indices para mejorar la performance
-userSchema.index({ firebaseUid: 1});
 userSchema.index({ token: 1});
 
 //Metodos del modelo

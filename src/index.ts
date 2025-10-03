@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
+import './config/firebase';
 
 //importo todas las rutas
 import userRoutes from './routes/userRoutes';
@@ -9,7 +10,11 @@ import matchRoutes from './routes/matchRoutes';
 import voteRoutes from './routes/voteRoutes';
 import adminRoutes from './routes/adminRoutes';
 import playerRoutes from './routes/playerRoutes';
+
+// ✅ VERIFICAR CARGA DE AUTHROUTES
+console.log('📂 Cargando authRoutes...');
 import authRoutes from './routes/authRoutes';
+console.log('✅ authRoutes cargado exitosamente');
 
 // Cargar variables de entorno
 dotenv.config();
@@ -29,12 +34,14 @@ app.get('/', (req, res) => {
 });
 
 // Rutas de la API - todas las rutas
+console.log('🛣️ Registrando rutas...');
 app.use('/api/users', userRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/votes', voteRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/players', playerRoutes);
 app.use('/api/auth', authRoutes);
+console.log('✅ Todas las rutas registradas, incluyendo /api/auth');
 
 // Iniciar servidor
 const startServer = async () => {
