@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
+import './config/firebase';
 
 //importo todas las rutas
 import userRoutes from './routes/userRoutes';
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 });
 
 // Rutas de la API - todas las rutas
+console.log('🛣️ Registrando rutas...');
 app.use('/api/users', userRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/votes', voteRoutes);

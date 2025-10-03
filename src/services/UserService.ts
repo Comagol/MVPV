@@ -113,7 +113,6 @@ export class UserService {
       resetToken: resetToken,
       userName: user.nombre
     });
-    console.log('Email de recuperacion enviado a:', user.email);
   }
 
   // metodo para resetear la contraseña usando el token
@@ -134,7 +133,6 @@ export class UserService {
 
     // guardo los cambios
     await user.save();
-    console.log('Contraseña restablecida exitosamente');
   }
 
   // Método para verificar si un token es válido (opcional, para el frontend)
