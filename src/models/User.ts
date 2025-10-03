@@ -6,7 +6,10 @@ export interface IUser extends Document {
   _id: Types.ObjectId;
   email: string;
   nombre: string;
-  password: string;
+  password?: string;
+  firebaseUid?: string;
+  provider: 'local' | 'google';
+  avatar?: string;
   fechaRegistro: Date;
   ultimoVoto?: Date;
   votosRealizados: number;
@@ -32,9 +35,25 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function(this: any): boolean {
+      return this.provider === 'local'; 
+    },
     minlength: 8,
     maxlength: 100
+  },
+  firebaseUid: {
+    type: String,
+    sparse: true,
+    unique: true
+  },
+  provider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local'
+  },
+  avatar: {
+    type: String,
+    required: false
   },
   fechaRegistro: {
     type: Date,
@@ -66,6 +85,7 @@ const userSchema = new Schema({
 });
 
 //Indices para mejorar la performance
+userSchema.index({ firebaseUid: 1});
 userSchema.index({ token: 1});
 
 //Metodos del modelo
@@ -95,7 +115,7 @@ userSchema.methods.verificarPassword = async function(password: string): Promise
 
 // Agregar middleware para encriptar password
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || !this.password) return next();
   
   try {
     this.password = await bcrypt.hash(this.password, 10);
