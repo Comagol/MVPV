@@ -10,11 +10,7 @@ import matchRoutes from './routes/matchRoutes';
 import voteRoutes from './routes/voteRoutes';
 import adminRoutes from './routes/adminRoutes';
 import playerRoutes from './routes/playerRoutes';
-
-// ✅ VERIFICAR CARGA DE AUTHROUTES
-console.log('📂 Cargando authRoutes...');
 import authRoutes from './routes/authRoutes';
-console.log('✅ authRoutes cargado exitosamente');
 
 // Cargar variables de entorno
 dotenv.config();
@@ -41,7 +37,6 @@ app.use('/api/votes', voteRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/players', playerRoutes);
 app.use('/api/auth', authRoutes);
-console.log('✅ Todas las rutas registradas, incluyendo /api/auth');
 
 // Iniciar servidor
 const startServer = async () => {
