@@ -42,7 +42,6 @@ router.post('/forgot-password', async (req, res) => {
       message: 'Si el email está registrado, recibirás un enlace de recuperación'
     });
   } catch (error: any) {
-    console.error('Error en forgot-password:', error);
     res.status(500).json({
       success: false,
       message: error instanceof Error ? error.message : 'Error interno del servidor'
@@ -70,7 +69,6 @@ router.get('/verify-reset-token/:token', async (req, res) => {
       ...result
     });
   } catch (error: any) {
-    console.error('Error en verify-reset-token:', error);
     res.status(500).json({
       success: false,
       message: 'Error interno del servidor'
@@ -107,7 +105,6 @@ router.post('/reset-password', async (req, res) => {
       message: 'Contraseña actualizada exitosamente'
     });
   } catch (error: any) {
-    console.error('Error en reset-password:', error);
     res.status(400).json({
       success: false,
       message: error instanceof Error ? error.message : 'Error interno del servidor'
@@ -120,13 +117,7 @@ router.post('/firebase-login', async (req, res) => {
   try {
     const { firebaseToken } = req.body;
     
-    console.log('🔍 Firebase login request recibido');
-    console.log('📦 Body completo:', req.body);
-    console.log('🎫 Token recibido:', firebaseToken ? 'SÍ' : 'NO');
-    console.log('📏 Longitud del token:', firebaseToken?.length || 0);
-    
     if (!firebaseToken) {
-      console.log('❌ Token faltante');
       return res.status(400).json({
         success: false,
         message: 'Token de Firebase requerido'
@@ -197,25 +188,11 @@ router.post('/firebase-login', async (req, res) => {
     });
 
   } catch (error: any) {
-    console.error('Error en firebase-login:', error);
     res.status(401).json({
       success: false,
       message: 'Token de Firebase inválido'
     });
   }
-});
-
-// ✅ ENDPOINT DE PRUEBA - TEMPORAL
-router.get('/test-firebase', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Firebase endpoint funcionando',
-    availableEndpoints: [
-      'POST /api/auth/firebase-login',
-      'POST /api/auth/login',
-      'POST /api/auth/forgot-password'
-    ]
-  });
 });
 
 export default router;
