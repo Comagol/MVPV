@@ -1,4 +1,7 @@
 import express from 'express';
+import { adminAuth } from '../config/firebase';
+import { User } from '../models/User';
+import { generateToken } from '../config/jwt';
 import { AuthService } from '../services/AuthService';
 import { UserService } from '../services/UserService';
 
@@ -110,6 +113,90 @@ router.post('/reset-password', async (req, res) => {
       message: error instanceof Error ? error.message : 'Error interno del servidor'
     });
   }
+
+  // Ruta para iniciar sesión / registrarse con Firebase
+  router.post('/firebase-login', async (req, res) => {
+    try {
+      const { firebaseToken } = req.body;
+      
+      if (!firebaseToken) {
+        return res.status(400).json({
+          success: false,
+          message: 'Token de Firebase requerido'
+        });
+      }
+  
+      // Verificar token con Firebase Admin
+      const decodedToken = await adminAuth.verifyIdToken(firebaseToken);
+      
+      // Buscar usuario por Firebase UID o email
+      let user = await User.findOne({ 
+        $or: [
+          { firebaseUid: decodedToken.uid },
+          { email: decodedToken.email }
+        ]
+      });
+  
+      if (user) {
+        // Usuario existe - actualizar Firebase UID si no lo tiene
+        if (!user.firebaseUid) {
+          user.firebaseUid = decodedToken.uid;
+          user.provider = 'google';
+          user.avatar = decodedToken.picture;
+          await user.save();
+        }
+      } else {
+        // Crear nuevo usuario
+        user = new User({
+          firebaseUid: decodedToken.uid,
+          email: decodedToken.email!,
+          nombre: decodedToken.name || 'Usuario Google',
+          provider: 'google',
+          avatar: decodedToken.picture,
+          activo: true
+        });
+        await user.save();
+      }
+  
+      // Verificar que el usuario esté activo
+      if (!user.activo) {
+        return res.status(403).json({
+          success: false,
+          message: 'El usuario está inactivo'
+        });
+      }
+  
+      // Generar JWT usando tu sistema actual
+      const jwtToken = generateToken({
+        userId: user._id.toString(),
+        email: user.email,
+        nombre: user.nombre
+      });
+  
+      // Respuesta igual que tu login actual
+      res.json({
+        success: true,
+        token: jwtToken,
+        userType: 'user',
+        user: {
+          id: user._id.toString(),
+          email: user.email,
+          nombre: user.nombre,
+          avatar: user.avatar,
+          provider: user.provider,
+          votosRealizados: user.votosRealizados,
+          activo: user.activo
+        }
+      });
+  
+    } catch (error: any) {
+      console.error('Error en firebase-login:', error);
+      res.status(401).json({
+        success: false,
+        message: 'Token de Firebase inválido'
+      });
+    }
+  });
 });
 
 export default router;
