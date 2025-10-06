@@ -276,9 +276,9 @@ npm install
 Crear archivo `.env` en la raíz del proyecto:
 ```env
 # Database
-MONGODB_URI=mongodb://localhost:27017/mvpv
+MONGODB_URI=mongodb://localhost:27017
 # o para MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/mvpv
+# MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net
 
 # JWT
 JWT_SECRET=tu_jwt_secret_super_seguro
