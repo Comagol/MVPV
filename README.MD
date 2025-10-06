@@ -278,7 +278,7 @@ Crear archivo `.env` en la raíz del proyecto:
 # Database
 MONGODB_URI=mongodb://localhost:27017
 # o para MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net
+# MONGODB_URI=mongodb+srv:
 
 # JWT
 JWT_SECRET=tu_jwt_secret_super_seguro
