@@ -69,6 +69,9 @@ async createVote(voteData: VoteRequest, userId: string): Promise<VoteResponse> {
     token: voteData.token
   });
 
+  //incremento el numero de votos del usuario
+  await this.userDao.incrementVotes(userId);
+
   // 🆕 NUEVO: Enviar email de agradecimiento después del voto exitoso
   try {
     // Obtener información del usuario
