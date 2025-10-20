@@ -100,4 +100,19 @@ export class MatchDao {
     .populate('jugadores ganador')
     .sort({ fecha: -1 });
   }
+
+  // Eliminar un partido
+  async deleteMatch(id: string): Promise<IMatch | null> {
+    const match = await Match.findById(id);
+    if (!match) {
+      return null;
+    }
+    if (match.estado === 'en_proceso') {
+      throw new Error('No se puede eliminar un partido que este en proceso');
+    }
+    if (match.estado === 'finalizado') {
+      throw new Error('No se puede eliminar un partido que este finalizado');
+    }
+    return await Match.findByIdAndDelete(id);
+  }
 }
