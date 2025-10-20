@@ -121,5 +121,18 @@ router.put('/:id/finish', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
+//Ruta para eliminar un partido
+router.delete('/:id', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const match = await matchService.deleteMatch(id);
+    if(!match) {
+      return res.status(404).json({ error: 'Partido no encontrado'});
+    }
+    res.json({ message: 'Partido eliminado correctamente', match});
+  } catch (error: any) {
+    res.status(400).json({ error: error.message});
+  }
+})
 
 export default router;
