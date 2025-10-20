@@ -103,7 +103,7 @@ export class MatchDao {
 
   // Eliminar un partido
   async deleteMatch(id: string): Promise<IMatch | null> {
-    const match = await Match.findById(id);
+    const match = await Match.findById(id).populate('jugadores ganador');
     if (!match) {
       return null;
     }
@@ -113,6 +113,7 @@ export class MatchDao {
     if (match.estado === 'finalizado') {
       throw new Error('No se puede eliminar un partido que este finalizado');
     }
-    return await Match.findByIdAndDelete(id);
+    await Match.findByIdAndDelete(id);
+    return match;
   }
 }

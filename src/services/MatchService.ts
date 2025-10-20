@@ -177,4 +177,22 @@ export class MatchService {
     // retorno la respuesta formateada
     return this.formatMatchResponse(match);
   }
+
+  // eliminar un partido
+  async deleteMatch(id: string): Promise<MatchResponse | null> {
+  // obtengo y valido que el partido exista
+  const currentMatch = await this.matchDao.findById(id);
+  if(!currentMatch) {
+    throw new Error('Partido no encontrado');
+  }
+  
+  // elimino el partido de la base de datos
+  const match = await this.matchDao.deleteMatch(id);
+  if(!match) {
+    return null;
+  }
+  
+  // Como el match eliminado no tiene populate, uso el currentMatch para formatear
+  return this.formatMatchResponse(currentMatch);
+}
 }
