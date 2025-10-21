@@ -63,4 +63,5 @@ export interface UserVoteHistoryResponse {
   matchEstado: string;
   matchDescripcion: string;
   fechaVoto: Date;
+  ganador: boolean;
 }

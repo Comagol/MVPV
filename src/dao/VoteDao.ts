@@ -222,4 +222,49 @@ export class VoteDao {
     
     return result[0] || null;
   }
+
+  // obtener el historial de votos de un usuario
+  async getUserVoteHistory(userId: string): Promise<any[]> {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw new Error('ID de usuario inválido');
+    }
+    
+    return await Vote.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) }},
+      { $lookup: {
+        from: 'players',
+        localField: 'playerId',
+        foreignField: '_id',
+        as: 'player'
+      }},
+      { $lookup: {
+        from: 'matches',
+        localField: 'matchId',
+        foreignField: '_id',
+        as: 'match'
+      }},
+      { $unwind: '$player' },
+      { $unwind: '$match' },
+      { $addFields: {
+        ganador: { $eq: ['$playerId', '$match.ganador'] }
+      }},
+      { $project: {
+        voteId: '$_id',
+        playerId: '$playerId',
+        playerName: '$player.nombre',
+        playerApodo: '$player.apodo',
+        playerImagen: '$player.imagen',
+        playerPosicion: '$player.posicion',
+        playerCamiseta: '$player.camiseta',
+        matchId: '$matchId',
+        matchFecha: '$match.fecha',
+        matchRival: '$match.rival',
+        matchEstado: '$match.estado',
+        matchDescripcion: '$match.descripcion',
+        fechaVoto: '$fechaVoto',
+        ganador: 1
+      }},
+      { $sort: { fechaVoto: -1 } }
+    ]);
+  }
 }
