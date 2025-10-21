@@ -100,5 +100,27 @@ router.get('/:matchId/my-vote', authenticateToken, async (req, res) => {
   }
 });
 
+//Ruta para obtener el historial de votos de un usuario
+router.get('/history', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const voteHistory = await voteService.getUserVoteHistory(userId);
+
+    if(voteHistory.length === 0) {
+      return res.status(200).json({
+        message: 'Aun no tienes votos en partidos finalizados',
+        history: []
+      });
+    }
+
+    res.status(200).json({
+      message: 'Historial de votos obtenido correctamente',
+      history: voteHistory
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 export default router;
