@@ -49,3 +49,18 @@ export interface UserVoteResponse {
   fechaVoto: Date;
 }
 
+export interface UserVoteHistoryResponse {
+  voteId: string;
+  playerId: string;
+  playerName: string;
+  playerApodo: string;
+  playerImagen: string;
+  playerPosicion: string;
+  playerCamiseta: number;
+  matchId: string;
+  matchFecha: Date;
+  matchRival: string;
+  matchEstado: string;
+  matchDescripcion: string;
+  fechaVoto: Date;
+}
