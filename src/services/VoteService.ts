@@ -1,5 +1,5 @@
 import { VoteDao } from "../dao/VoteDao";
-import { VoteResponse, VoteRequest, VoteStatistics, VoteValidationResponse, WinnerResponse, UserVoteResponse } from "../types/vote.types";
+import { VoteResponse, VoteRequest, VoteStatistics, VoteValidationResponse, WinnerResponse, UserVoteResponse, UserVoteHistoryResponse } from "../types/vote.types";
 import { IVote } from "../models/Vote";
 import { MatchDao } from "../dao/MatchDao";
 import { PlayerDao } from "../dao/PlayerDao";
@@ -193,5 +193,33 @@ async createVote(voteData: VoteRequest, userId: string): Promise<VoteResponse> {
       playerImagen: userVote.playerImagen,
       fechaVoto: userVote.fechaVoto
     };
+  }
+
+  // obtener el historial de votos de un usuario
+  async getUserVoteHistory(userId: string): Promise<UserVoteHistoryResponse[]> {
+    const voteHistory = await this.voteDao.getUserVoteHistory(userId);
+    
+    // Si no hay votos, devuelvo un array vacío
+    if (!voteHistory || voteHistory.length === 0) {
+      return [];
+    }
+    
+    // formateo la respuesta
+    return voteHistory.map(vote => ({
+      voteId: vote.voteId.toString(),
+      playerId: vote.playerId.toString(),
+      playerName: vote.playerName,
+      playerApodo: vote.playerApodo,
+      playerImagen: vote.playerImagen,
+      playerPosicion: vote.playerPosicion,
+      playerCamiseta: vote.playerCamiseta,
+      matchId: vote.matchId.toString(),
+      matchFecha: vote.matchFecha,
+      matchRival: vote.matchRival,
+      matchEstado: vote.matchEstado,
+      matchDescripcion: vote.matchDescripcion,
+      fechaVoto: vote.fechaVoto,
+      ganador: vote.ganador
+    }));
   }
 }
