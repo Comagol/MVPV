@@ -245,6 +245,7 @@ export class VoteDao {
       }},
       { $unwind: '$player' },
       { $unwind: '$match' },
+      { $match: { 'match.estado': 'finalizado' }},
       { $addFields: {
         ganador: { $eq: ['$playerId', '$match.ganador'] }
       }},
